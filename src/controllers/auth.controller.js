@@ -2,16 +2,21 @@ import { signUpSchema } from "../models/auth.schema.js";
 import { signUpService } from "../services/auth.service.js";
 
 export const signUpController = async (req, res, next) => {
-  try {
-    const userDataObject = await signUpSchema.parseAsync(req.body);
-    const result = await signUpService(userDataObject);
+  const userDataObject = signUpSchema.safeParseAsync(req.body);
 
+  if ((await userDataObject).error) {
     res.json({
-      status: "Success",
-      message: "Success SignUp proccess",
-      data: result,
+      status: "Fail",
+      message: "Fail to sign up",
+      error: (await userDataObject).error.issues,
     });
-  } catch (error) {
-    next(error);
   }
+
+  const result = await signUpService((await userDataObject).data);
+
+  res.json({
+    status: "Success",
+    message: "success to sign up",
+    data: result,
+  });
 };

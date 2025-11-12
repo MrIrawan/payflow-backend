@@ -1,7 +1,7 @@
 // express Router object
 import { Router } from "express";
 
-import { signUpController } from "../controllers/auth.controller";
+import { signUpController } from "../controllers/auth.controller.js";
 
 // express Router instance
 const route = Router();

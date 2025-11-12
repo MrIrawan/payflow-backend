@@ -4,15 +4,18 @@ export const signUpService = async (data) => {
   const dataObject = data;
 
   try {
-    const { data, error } = await supabase.auth.signUp({
+    // avoid shadowing `data` variable; destructure with a different name
+    const { data: signUpData, error } = await supabase.auth.signUp({
       email: dataObject.email_address,
       password: dataObject.password_email,
     });
 
-    if (error) return error.message;
+    if (error) throw error;
 
-    return data;
+    return signUpData;
   } catch (error) {
-    console.error(error);
+    // rethrow so controller's error handler (or express error middleware) handles it
+    console.error("signUpService error:", error?.message || error);
+    throw error;
   }
 };
