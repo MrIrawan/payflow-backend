@@ -12,3 +12,8 @@ export const signUpSchema = z.object({
     .string({ required_error: "password email is required" })
     .min(6, "minimal 6 length"),
 });
+
+export const signInWithEmailSchema = z.object({
+  email_adress: z.string().email({ message: "email is required" }),
+  password_email: z.string("password email is required."),
+});

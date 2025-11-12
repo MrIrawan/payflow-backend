@@ -19,8 +19,29 @@ export const signUpService = async (data) => {
 
     return signUpData;
   } catch (error) {
-    // rethrow so controller's error handler (or express error middleware) handles it
     console.error("signUpService error:", error?.message || error);
+    throw error;
+  }
+};
+
+export const signInWithEmailService = async (emailData, passwordData) => {
+  const emailAdress = emailData;
+  const passwordEmail = passwordData;
+
+  if (!emailAdress | !passwordEmail)
+    throw new Error(`email adress or password email are rquired.`);
+
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: emailAdress,
+      password: passwordEmail,
+    });
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.error("sign in service error:", error?.message || error);
     throw error;
   }
 };
