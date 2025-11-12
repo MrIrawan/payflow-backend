@@ -1,5 +1,6 @@
 import { signUpSchema } from "../models/auth.schema.js";
 import { signUpService } from "../services/auth.service.js";
+import { successPayload } from "../utils/succesPayload.js";
 
 export const signUpController = async (req, res, next) => {
   const userDataObject = signUpSchema.safeParseAsync(req.body);
@@ -13,10 +14,11 @@ export const signUpController = async (req, res, next) => {
   }
 
   const result = await signUpService((await userDataObject).data);
+  const payload = successPayload("success to sign up", result);
 
   res.json({
-    status: "Success",
-    message: "success to sign up",
-    data: result,
+    status: payload.status,
+    message: payload.message,
+    data: payload.data,
   });
 };
