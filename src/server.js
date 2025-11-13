@@ -4,6 +4,7 @@ import cors from "cors";
 import "dotenv/config";
 
 import authRoute from "./routes/auth.routes.js";
+import userRoute from "./routes/teacher.routes.js";
 
 const app = express();
 const PORT = process.env.SERVER_PORT || 3000;
@@ -14,6 +15,7 @@ app.use(bodyParser.json());
 
 // mount routes under /api/v1
 app.use("/api/v1", authRoute);
+app.use("/api/v1", userRoute);
 
 app.get("/", (req, res) => {
   res.json({
