@@ -1,10 +1,10 @@
 import { supabase } from "../lib/supabase.js";
+import { mergeName } from "../utils/mergeName.js";
 
 export const signUpService = async (data) => {
   const dataObject = data;
 
   try {
-    // avoid shadowing `data` variable; destructure with a different name
     const { data: signUpData, error } = await supabase.auth.signUp({
       email: dataObject.email_address,
       password: dataObject.password_email,
@@ -16,6 +16,22 @@ export const signUpService = async (data) => {
     });
 
     if (error) throw error;
+
+    const { data, error: insertError } = await supabase
+      .from("data_guru")
+      .insert({
+        guru_id: signUpData.user.id,
+        nama_lengkap: mergeName(
+          signUpData.user.user_metadata.user_data_object.first_name,
+          signUpData.user.user_metadata.user_data_object.last_name
+        ),
+        date_of_birth:
+          signUpData.user.user_metadata.user_data_object.date_of_birth,
+        jenis_kelamin:
+          signUpData.user.user_metadata.user_data_object.jenis_kelamin,
+      });
+
+    if (insertError) throw insertError;
 
     return signUpData;
   } catch (error) {
