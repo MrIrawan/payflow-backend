@@ -36,18 +36,35 @@ export const getTeacherDataByIdController = async (request, response) => {
 export const getTeacherDataByGenderController = async (request, response) => {
   const genderOption = request.params.gender;
 
-  if ((genderOption != "Laki-laki") | (genderOption != "Perempuan")) {
-    response.json({
-      status: "Bad request",
-      message: "failed to get teacher data, gender is invalid.",
+  if (genderOption === undefined) {
+    response.status(400).send({
+      success: false,
+      message: "failed to fetch.",
+      error: {
+        code: 400,
+        text: "Bad request",
+        detail: `unable to fetch teacher data, please insert gender option.`,
+      },
     });
   }
 
-  const result = await getTeacherDataByGenderService(genderOption);
+  if (genderOption === "male" || genderOption === "female") {
+    const result = await getTeacherDataByGenderService(genderOption);
 
-  response.json({
-    status: "Success",
-    message: `success get teacher data with ${genderOption} gender.`,
-    data: result,
-  });
+    response.json({
+      status: "Success",
+      message: `success get teacher data with ${genderOption} gender.`,
+      data: result,
+    });
+  } else {
+    response.status(400).send({
+      success: false,
+      message: "failed to fetch.",
+      error: {
+        code: 400,
+        text: "Bad request",
+        detail: `unable to fetch teacher data with gender <${genderOption}>`,
+      },
+    });
+  }
 };

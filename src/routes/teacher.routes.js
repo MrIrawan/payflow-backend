@@ -5,13 +5,14 @@ import { deleteTeacherDataController } from "../controllers/deleteTeacherData.co
 import {
   getTeacherDataController,
   getTeacherDataByIdController,
+  getTeacherDataByGenderController,
 } from "../controllers/getTeacherData.controller.js";
 import { searchTeacherDataController } from "../controllers/searchTeacherData.controller.js";
 
 const route = Router();
 
 route.get("/teachers", getTeacherDataController);
-route.get("/teacher/gender/:gender", searchTeacherDataController);
+route.get("/teacher/gender/:gender", getTeacherDataByGenderController);
 route.get("/teacher/:guru_id", getTeacherDataByIdController);
 route.get("/teacher/search", searchTeacherDataController);
 route.put("/update/t/:id", updateTeacherDataController);
