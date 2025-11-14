@@ -1,3 +1,7 @@
 export const mergeName = (firstName, lastName) => {
-  return `${firstName} ${lastName}`;
+  if (lastName === undefined) {
+    return firstName;
+  } else {
+    return `${firstName} ${lastName}`;
+  }
 };
