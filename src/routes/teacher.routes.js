@@ -14,7 +14,7 @@ const route = Router();
 route.get("/teachers", getTeacherDataController);
 route.get("/teacher/gender/:gender", getTeacherDataByGenderController);
 route.get("/teacher/:guru_id", getTeacherDataByIdController);
-route.get("/teacher/search", searchTeacherDataController);
+route.get("/teacher", searchTeacherDataController);
 route.put("/update/t/:id", updateTeacherDataController);
 route.delete("/delete/t/:id", deleteTeacherDataController);
 
