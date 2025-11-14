@@ -11,8 +11,9 @@ import { searchTeacherDataController } from "../controllers/searchTeacherData.co
 const route = Router();
 
 route.get("/teachers", getTeacherDataController);
+route.get("/teacher/gender/:gender", searchTeacherDataController);
 route.get("/teacher/:guru_id", getTeacherDataByIdController);
-route.get("/teacher", searchTeacherDataController);
+route.get("/teacher/search", searchTeacherDataController);
 route.put("/update/t/:id", updateTeacherDataController);
 route.delete("/delete/t/:id", deleteTeacherDataController);
 

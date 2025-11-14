@@ -4,7 +4,7 @@ export const searchTeacherDataService = async (keywordData) => {
   const searchKeyword = keywordData;
 
   if (!searchKeyword) {
-    throw new Error("search keayword is required.");
+    throw new Error("search keyword is required.");
   }
 
   try {
