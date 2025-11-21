@@ -1,7 +1,5 @@
-export const successPayload = (succesMessage, successData) => {
+export const successPayload = (successData) => {
   return {
-    status: "Success",
-    message: succesMessage,
     data: {
       user: {
         id: successData.user.id,

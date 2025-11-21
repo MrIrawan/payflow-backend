@@ -5,7 +5,7 @@ export const signUpSchema = z.object({
     .string({ required_error: "first name is required" })
     .min(3, "first name must have 3 digits"),
   last_name: z.string().optional(),
-  jenis_kelamin: z.enum(["male", "female"]),
+  gender: z.enum(["male", "female"]),
   date_of_birth: z.coerce.date("date of birth is required"),
   email_address: z.string().email({ message: "email address is required" }),
   password_email: z
