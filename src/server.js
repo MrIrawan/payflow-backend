@@ -7,7 +7,7 @@ import authRoute from "./routes/auth.routes.js";
 import teacherRoute from "./routes/teacher.routes.js";
 
 const app = express();
-const PORT = process.env.SERVER_PORT || 3000;
+const PORT = process.env.SERVER_PORT || 8800;
 
 // apply middleware correctly
 app.use(cors());

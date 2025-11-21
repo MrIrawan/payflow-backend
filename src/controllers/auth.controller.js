@@ -10,47 +10,52 @@ import {
 import { successPayload } from "../utils/succesPayload.js";
 
 export const signUpController = async (req, res, next) => {
-  const userDataObject = signUpSchema.safeParseAsync(req.body);
-
-  if ((await userDataObject).error) {
+  if (!req.body) {
     res.json({
-      status: "Fail",
-      message: "Fail to sign up",
-      error: (await userDataObject).error.issues,
+      success: false,
+      message: "sign up data is required",
+      data: signUpData,
     });
   }
 
-  const result = await signUpService((await userDataObject).data);
-  const payload = successPayload("success to sign up", result);
+  const signUpData = signUpSchema.safeParse(req.body);
+
+  if (signUpData.error) {
+    res.json({
+      success: false,
+      message: "sign up failed, something went error",
+      data: signUpData.data,
+    });
+  }
+
+  const result = await signUpService(signUpData.data);
+  const payload = successPayload(result);
 
   res.json({
-    status: payload.status,
-    message: payload.message,
-    data: payload.data,
+    success: true,
+    message: "sign up successfuly",
+    data: payload,
   });
 };
 
 export const signInWithEmailController = async (req, res, next) => {
-  const userDataObject = signInWithEmailSchema.safeParseAsync(req.body);
+  const userDataObject = signInWithEmailSchema.safeParse(req.body);
 
-  if ((await userDataObject).error) {
+  if (userDataObject.error) {
     res.json({
       status: "Fail",
       message: "fail to sign in with email.",
-      error: (await userDataObject).error.issues,
+      error: userDataObject.error.issues,
     });
   }
 
   const result = await signInWithEmailService(
-    (
-      await userDataObject
-    ).data.email_adress,
-    (
-      await userDataObject
-    ).data.password_email
+    userDataObject.data.email_adress,
+    userDataObject.data.password_email
   );
   const payload = successPayload("success to sign in with email", result);
   res.json({
+    success: true,
     result: payload,
   });
 };
