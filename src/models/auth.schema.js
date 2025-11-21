@@ -14,6 +14,7 @@ export const signUpSchema = z.object({
 });
 
 export const signInWithEmailSchema = z.object({
-  email_adress: z.string().email({ message: "email is required" }),
+  username: z.string().optional(),
+  email_address: z.string().email({ message: "email is required" }),
   password_email: z.string("password email is required."),
 });

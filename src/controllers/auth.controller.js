@@ -39,21 +39,28 @@ export const signUpController = async (req, res, next) => {
 };
 
 export const signInWithEmailController = async (req, res, next) => {
-  const userDataObject = signInWithEmailSchema.safeParse(req.body);
-
-  if (userDataObject.error) {
+  if (!req.body) {
     res.json({
-      status: "Fail",
+      success: false,
+      message: "sign in data is required",
+    });
+  }
+
+  const signInData = signInWithEmailSchema.safeParse(req.body);
+
+  if (signInData.error) {
+    res.json({
+      success: false,
       message: "fail to sign in with email.",
-      error: userDataObject.error.issues,
+      error: signInData.error.issues,
     });
   }
 
   const result = await signInWithEmailService(
-    userDataObject.data.email_adress,
-    userDataObject.data.password_email
+    signInData.data.email_address,
+    signInData.data.password_email
   );
-  const payload = successPayload("success to sign in with email", result);
+  const payload = successPayload(result);
   res.json({
     success: true,
     result: payload,
