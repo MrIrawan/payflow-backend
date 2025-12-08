@@ -40,7 +40,7 @@ export const signUpController = async (req, res, next) => {
 
 export const signInWithEmailController = async (req, res, next) => {
   if (!req.body) {
-    res.json({
+    return res.status(400).json({
       success: false,
       message: "sign in data is required",
     });
@@ -49,7 +49,7 @@ export const signInWithEmailController = async (req, res, next) => {
   const signInData = signInWithEmailSchema.safeParse(req.body);
 
   if (signInData.error) {
-    res.json({
+    return res.status(400).json({
       success: false,
       message: "fail to sign in with email.",
       error: signInData.error.issues,
