@@ -10,7 +10,12 @@ const app = express();
 const PORT = process.env.SERVER_PORT || 8800;
 
 // apply middleware correctly
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || "http://localhost:3000",
+    credentials: true,
+  })
+);
 app.use(bodyParser.json());
 
 // mount routes under /api/v1
