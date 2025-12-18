@@ -6,6 +6,7 @@ import "dotenv/config";
 
 import authRoute from "./routes/auth.routes.js";
 import teacherRoute from "./routes/teacher.routes.js";
+import attendanceRoute from "./routes/attendance.route.js";
 
 const app = express();
 const PORT = process.env.SERVER_PORT || 8800;
@@ -23,6 +24,7 @@ app.use(cookieParser());
 // mount routes under /api/v1
 app.use("/api/v1", authRoute);
 app.use("/api/v1", teacherRoute);
+app.use("/api/v1", attendanceRoute);
 
 app.get("/", (req, res) => {
   res.json({

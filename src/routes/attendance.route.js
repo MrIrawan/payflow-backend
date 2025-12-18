@@ -6,3 +6,5 @@ import { storeAttendanceController } from "../controllers/storeAttendance.contro
 const route = Router();
 
 route.post("attendance/store", verifyToken, storeAttendanceController);
+
+export default route;
