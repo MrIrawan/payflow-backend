@@ -19,17 +19,15 @@ export const signUpController = async (req, res, next) => {
   }
 
   const signUpData = signUpSchema.safeParse(req.body);
-
   if (signUpData.error) {
     res.json({
       success: false,
       message: "sign up failed, something went error",
-      data: signUpData.data,
+      error: signUpData.error.issues,
     });
   }
 
   const result = await signUpService(signUpData.data);
-
   const { access_token, refresh_token } = result.session;
 
   res.cookie("accessToken", access_token, {
@@ -47,7 +45,6 @@ export const signUpController = async (req, res, next) => {
   });
 
   const payload = successPayload(result);
-
   res.json({
     success: true,
     message: "sign up successfuly",

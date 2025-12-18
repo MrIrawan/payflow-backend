@@ -1,5 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import "dotenv/config";
 
@@ -17,6 +18,7 @@ app.use(
   })
 );
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 // mount routes under /api/v1
 app.use("/api/v1", authRoute);
