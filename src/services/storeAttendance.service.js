@@ -20,7 +20,8 @@ export const storeAttendanceService = async (data) => {
         checkin_time: formatTime(attendanceData.checkin_time),
         checkout_time: formatTime(attendanceData.checkout_time),
       })
-      .select("*");
+      .select("*")
+      .single();
 
     if (error) {
       throw new Error(error.message);
