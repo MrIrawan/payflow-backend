@@ -12,17 +12,18 @@ export const storeAttendanceController = async (request, response) => {
   const attendanceData = attendanceSchema.safeParse(request.body);
 
   if (attendanceData.error) {
-    response.json({
+    response.status(400).json({
       success: false,
-      message: attendanceData.error.message,
-      issue: attendanceData.error.issues,
+      statusText: "Bad Request",
+      message: attendanceData.error.issues,
     });
   }
 
   const storeAttendance = storeAttendanceService(attendanceData.data);
 
-  response.json({
+  response.status(201).json({
     success: true,
+    statusText: "Created",
     message: "success to store attendance data",
     data: storeAttendance,
   });

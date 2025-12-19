@@ -13,15 +13,14 @@ export const storeAttendanceService = async (data) => {
     const { data, error } = await supabase
       .from("absensi")
       .insert(attendanceData)
-      .select();
+      .select("*");
 
     if (error) {
-      throw new Error("error attendance service :", error);
+      throw new Error(error.message);
     }
 
     return data;
   } catch (error) {
     console.error("error attendance service", error);
-    throw Error(error);
   }
 };

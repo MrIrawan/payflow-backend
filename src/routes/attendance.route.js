@@ -6,7 +6,7 @@ import { getAllAttendanceController } from "../controllers/getAllAttendance.cont
 
 const route = Router();
 
-route.get("/attendance", verifyToken, getAllAttendanceController);
-route.post("/attendance/store", verifyToken, storeAttendanceController);
+route.get("/attendance", getAllAttendanceController);
+route.post("/attendance/store", storeAttendanceController);
 
 export default route;
