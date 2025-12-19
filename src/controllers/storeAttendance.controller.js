@@ -19,7 +19,7 @@ export const storeAttendanceController = async (request, response) => {
     });
   }
 
-  const storeAttendance = storeAttendanceService(attendanceData.data);
+  const storeAttendance = await storeAttendanceService(attendanceData.data);
 
   response.status(201).json({
     success: true,
