@@ -13,8 +13,8 @@ export const getTeacherDataService = async () => {
   }
 };
 
-export const getTeacherDataByIdService = async (data_id) => {
-  const dataId = data_id;
+export const getTeacherDataByIdService = async (identifier) => {
+  const dataId = identifier;
   if (!dataId) {
     throw new Error("data id is required.");
   }
@@ -32,8 +32,8 @@ export const getTeacherDataByIdService = async (data_id) => {
   }
 };
 
-export const getTeacherDataByGenderService = async (genderString) => {
-  const gender = genderString;
+export const getTeacherDataByGenderService = async (identifier) => {
+  const gender = identifier;
 
   if (!gender) {
     throw new Error("gender is required.");

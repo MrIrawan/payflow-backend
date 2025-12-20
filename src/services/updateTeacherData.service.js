@@ -1,9 +1,9 @@
 import { supabase } from "../lib/supabase.js";
 import { mergeName } from "../utils/mergeName.js";
 
-export const updateTeacherDataService = async (update_data, data_id) => {
-  const updateData = update_data;
-  const userId = data_id;
+export const updateTeacherDataService = async (data, identifier) => {
+  const updateData = data;
+  const userId = identifier;
   if (!updateData | !userId)
     throw new Error("update data object or data id is required.");
 
