@@ -1,5 +1,5 @@
 import { attendanceSchema } from "../models/attendance.schema.js";
-import { updateAttendanceSchema } from "../models/updateAttendance.schema.js";
+import { updateAttendanceSchema } from "../models/attendance.schema.js";
 
 import { storeAttendanceService } from "../services/attendance.service.js";
 import { updateAttendanceService } from "../services/attendance.service.js";
