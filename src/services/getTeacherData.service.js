@@ -40,14 +40,12 @@ export const getTeacherDataByGenderService = async (genderString) => {
   }
 
   try {
-    const { data, error } = await supabase
+    const response = await supabase
       .from("data_guru")
       .select("*")
       .eq("jenis_kelamin", gender);
 
-    if (error) throw error;
-
-    return data;
+    return response;
   } catch (error) {
     console.error(
       "get teacher by gender service error:",

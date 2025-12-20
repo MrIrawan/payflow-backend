@@ -7,17 +7,18 @@ import {
 export const getTeacherDataController = async (request, response) => {
   const result = await getTeacherDataService();
 
-  response.json({
-    status: "Success",
+  response.status(200).json({
+    success: true,
+    statusText: "Ok",
     message: "success get all teachers data",
     data: result,
   });
 };
 
 export const getTeacherDataByIdController = async (request, response) => {
-  const guruId = request.params.teacher_id;
+  const teacherId = request.params.teacher_id;
 
-  if (!guruId) {
+  if (!teacherId) {
     response.status(400).json({
       success: false,
       statusText: "Bad request",
@@ -25,7 +26,7 @@ export const getTeacherDataByIdController = async (request, response) => {
     });
   }
 
-  const result = await getTeacherDataByIdService(guruId);
+  const result = await getTeacherDataByIdService(teacherId);
 
   if (result.error) {
     response.status(result.status).json({
@@ -40,7 +41,7 @@ export const getTeacherDataByIdController = async (request, response) => {
     response.status(404).json({
       success: false,
       statusText: "Not found",
-      message: `cannot find teacher data with id <${guruId}>`,
+      message: `cannot find teacher data with id <${teacherId}>`,
       data: result.data,
     });
   }
@@ -48,7 +49,7 @@ export const getTeacherDataByIdController = async (request, response) => {
   response.status(200).json({
     success: true,
     statusText: "Ok",
-    message: `accessing data guru with id <${guruId}>`,
+    message: `accessing teacher data with id <${teacherId}>`,
     data: result.data,
   });
 };
@@ -59,32 +60,36 @@ export const getTeacherDataByGenderController = async (request, response) => {
   if (genderOption === undefined) {
     response.status(400).send({
       success: false,
-      message: "failed to fetch.",
-      error: {
-        code: 400,
-        text: "Bad request",
-        detail: `unable to fetch teacher data, please insert gender option.`,
-      },
+      statusText: "Bad request",
+      message:
+        "unable to access teacher data by gender, gender identifier is required.",
     });
   }
 
   if (genderOption === "male" || genderOption === "female") {
     const result = await getTeacherDataByGenderService(genderOption);
 
-    response.json({
-      status: "Success",
+    if (result.error) {
+      response.status(result.status).json({
+        success: false,
+        statusText: result.statusText,
+        message: result.error.message,
+        details: result.error.details,
+      });
+    }
+
+    response.status(200).json({
+      success: true,
+      statusText: "Ok",
       message: `success get teacher data with ${genderOption} gender.`,
-      data: result,
+      data: result.data,
     });
   } else {
-    response.status(400).send({
+    response.status(400).json({
       success: false,
-      message: "failed to fetch.",
-      error: {
-        code: 400,
-        text: "Bad request",
-        detail: `unable to fetch teacher data with gender <${genderOption}>`,
-      },
+      statusText: "Bad request",
+      message:
+        "unable to access teacher data by gender, please choose between 'male' or 'female'.",
     });
   }
 };
