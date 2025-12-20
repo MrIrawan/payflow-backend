@@ -1,10 +1,10 @@
 import { Router } from "express";
 import { verifyToken } from "../middleware/verifyToken.js";
 
-import { storeAttendanceController } from "../controllers/storeAttendance.controller.js";
-import { getAllAttendanceController } from "../controllers/getAllAttendance.controller.js";
-import { updateAttendanceController } from "../controllers/updateAttendance.controller.js";
-import { deleteAttendanceController } from "../controllers/deleteAttendance.controller.js";
+import { storeAttendanceController } from "../controllers/attendance.controller.js";
+import { updateAttendanceController } from "../controllers/attendance.controller.js";
+import { getAllAttendanceController } from "../controllers/attendance.controller.js";
+import { deleteAttendanceController } from "../controllers/attendance.controller.js";
 
 const route = Router();
 
