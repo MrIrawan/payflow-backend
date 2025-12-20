@@ -12,6 +12,7 @@ export const attendanceSchema = z.object({
 });
 
 export const updateAttendanceSchema = z.object({
+  teacher_name: z.string().optional(),
   attendance_date: z.coerce.date().optional(),
   checkin_time: z.number().optional(),
   checkout_time: z.number().optional(),
