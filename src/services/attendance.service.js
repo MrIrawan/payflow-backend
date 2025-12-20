@@ -62,6 +62,21 @@ export const updateAttendanceService = async (updateData, attendanceId) => {
   }
 };
 
+export const getAllAttendanceService = async () => {
+  try {
+    const { data, error } = await supabase.from("absensi").select("*");
+
+    if (error) {
+      throw new Error("error fetching data: ", error);
+    }
+
+    return data;
+  } catch (error) {
+    console.error("get all attendance error: ", error);
+    throw new Error("error message: ", error);
+  }
+};
+
 export const deleteAttendanceService = async (attendanceId) => {
   if (!attendanceId) {
     throw new Error(
