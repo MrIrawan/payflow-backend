@@ -15,21 +15,41 @@ export const getTeacherDataController = async (request, response) => {
 };
 
 export const getTeacherDataByIdController = async (request, response) => {
-  const guruId = request.params.guru_id;
+  const guruId = request.params.teacher_id;
 
   if (!guruId) {
-    response.json({
-      status: "Bad request",
-      message: "failed to access data guru, guru id is required.",
+    response.status(400).json({
+      success: false,
+      statusText: "Bad request",
+      message: "failed to access data guru, teacher id is required.",
     });
   }
 
   const result = await getTeacherDataByIdService(guruId);
 
-  response.json({
-    status: "Success",
+  if (result.error) {
+    response.status(result.status).json({
+      success: false,
+      statusText: result.statusText,
+      message: result.error.message,
+      details: result.error.details,
+    });
+  }
+
+  if (result.data.length === 0) {
+    response.status(404).json({
+      success: false,
+      statusText: "Not found",
+      message: `cannot find teacher data with id <${guruId}>`,
+      data: result.data,
+    });
+  }
+
+  response.status(200).json({
+    success: true,
+    statusText: "Ok",
     message: `accessing data guru with id <${guruId}>`,
-    data: result,
+    data: result.data,
   });
 };
 

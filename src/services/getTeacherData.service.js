@@ -20,15 +20,12 @@ export const getTeacherDataByIdService = async (data_id) => {
   }
 
   try {
-    const { data, error } = await supabase
+    const response = await supabase
       .from("data_guru")
       .select("*")
-      .eq("guru_id", dataId)
-      .single();
+      .eq("guru_id", dataId);
 
-    if (error) throw error;
-
-    return data;
+    return response;
   } catch (error) {
     console.error("get teacher data by id error", error?.message || error);
     throw error;
