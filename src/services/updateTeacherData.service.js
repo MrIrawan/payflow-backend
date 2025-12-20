@@ -8,7 +8,7 @@ export const updateTeacherDataService = async (data, identifier) => {
     throw new Error("update data object or data id is required.");
 
   try {
-    const { data, error } = await supabase
+    const response = await supabase
       .from("data_guru")
       .update({
         nama_lengkap: mergeName(updateData.first_name, updateData.last_name),
@@ -17,9 +17,7 @@ export const updateTeacherDataService = async (data, identifier) => {
       .eq("guru_id", userId)
       .select();
 
-    if (error) throw error;
-
-    return data;
+    return response;
   } catch (error) {
     console.error("update user service error:", error?.message || error);
     throw error;
