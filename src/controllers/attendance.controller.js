@@ -5,6 +5,11 @@ import { storeAttendanceService } from "../services/attendance.service.js";
 import { updateAttendanceService } from "../services/attendance.service.js";
 import { deleteAttendanceService } from "../services/attendance.service.js";
 import { getAllAttendanceService } from "../services/attendance.service.js";
+import { isWithinAcceptableRadius } from "../utils/calculateDistance.js";
+
+const schoolLat = parseFloat(process.env.SCHOOL_LATITUDE);
+const schoolLon = parseFloat(process.env.SCHOOL_LONGITUDE);
+const acceptableRadius = parseInt(process.env.ACCEPTABLE_RADIUS) || 500;
 
 export const getAllAttendanceController = async (request, response) => {
   const getAllAttendance = await getAllAttendanceService();
@@ -21,6 +26,31 @@ export const storeAttendanceController = async (request, response) => {
     response.json({
       success: false,
       message: "failed to handle store attendance, attendance data is required",
+    });
+  }
+
+  if (!request.body.location) {
+    response.status(406).json({
+      success: false,
+      statusText: "Not acceptable",
+      message:
+        "unable to store attendance data, user must contains their location.",
+    });
+  }
+
+  const validateLocation = isWithinAcceptableRadius(
+    request.body.location.latitude,
+    request.body.location.longitude,
+    schoolLat,
+    schoolLon,
+    acceptableRadius
+  );
+
+  if (!validateLocation.isValid) {
+    response.status(403).json({
+      success: false,
+      statusText: "Forbidden",
+      message: `you are ${validateLocation.distance}m away from school. maximum allowed distance: ${validateLocation.radiusLimit}m.`,
     });
   }
 
