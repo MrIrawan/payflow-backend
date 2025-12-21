@@ -2,7 +2,7 @@ import { updateTeacherDataSchema } from "../models/updateTeacherData.schema.js";
 import { updateTeacherDataService } from "../services/updateTeacherData.service.js";
 
 export const updateTeacherDataController = async (request, response) => {
-  const userId = request.params.id;
+  const teacherId = request.params.teacher_id;
   const userDataObject = updateTeacherDataSchema.safeParse(request.body);
 
   if (userDataObject === undefined) {
@@ -13,6 +13,14 @@ export const updateTeacherDataController = async (request, response) => {
     });
   }
 
+  if (!teacherId) {
+    response.status(400).json({
+      success: false,
+      statusText: "Bad request",
+      message: "unable to update teacher data, teacher ID is required.",
+    });
+  }
+
   if (userDataObject.error) {
     response.status(400).json({
       success: false,
@@ -20,7 +28,7 @@ export const updateTeacherDataController = async (request, response) => {
     });
   }
 
-  const result = await updateTeacherDataService(userDataObject.data, userId);
+  const result = await updateTeacherDataService(userDataObject.data, teacherId);
 
   if (result.error) {
     response.status(result.status).json({
@@ -34,7 +42,7 @@ export const updateTeacherDataController = async (request, response) => {
   response.status(200).json({
     success: false,
     statusText: "Ok",
-    message: `teacher data with id <${userId}> successfully updated.`,
+    message: `teacher data with id <${teacherId}> successfully updated.`,
     data: result.data,
   });
 };
