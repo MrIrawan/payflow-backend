@@ -100,3 +100,19 @@ export const deleteAttendanceService = async (attendanceId) => {
     throw error;
   }
 };
+
+export const getAttendanceByDateService = async (identifier) => {
+  const date = identifier;
+
+  try {
+    const response = await supabase
+      .from("absensi")
+      .select("*")
+      .eq("attendance_date", formatDate(date));
+
+    return response;
+  } catch (error) {
+    console.error("get attendance by date error:", error);
+    throw error;
+  }
+};
