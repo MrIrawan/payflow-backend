@@ -5,6 +5,8 @@ import { storeAttendanceService } from "../services/attendance.service.js";
 import { updateAttendanceService } from "../services/attendance.service.js";
 import { deleteAttendanceService } from "../services/attendance.service.js";
 import { getAllAttendanceService } from "../services/attendance.service.js";
+import { getAttendanceByDateService } from "../services/attendance.service.js";
+
 import { isWithinAcceptableRadius } from "../utils/calculateDistance.js";
 
 const schoolLat = parseFloat(process.env.SCHOOL_LATITUDE);
@@ -131,5 +133,35 @@ export const deleteAttendanceController = async (request, response) => {
     success: true,
     statusText: deleteAttendance.statusText,
     message: `success to delete attendance with id <${request.params.attendance_id}>`,
+  });
+};
+
+export const getAttendanceByDateController = async (request, response) => {
+  const date = request.body.date;
+
+  if (!date) {
+    response.status(400).json({
+      success: false,
+      statusText: "Bad Request",
+      message: "unable to access get attendance by date, date is required.",
+    });
+  }
+
+  const result = await getAttendanceByDateService(date);
+
+  if (result.error) {
+    response.status(result.status).json({
+      success: true,
+      statusText: result.statusText,
+      message: result.error.message,
+      details: result.error.details,
+    });
+  }
+
+  response.status(result.status).json({
+    success: true,
+    statusText: result.statusText,
+    message: `get attendance data by date ${date} is successfully`,
+    data: result.data,
   });
 };
