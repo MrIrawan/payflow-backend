@@ -1,7 +1,7 @@
 import { supabase } from "../lib/supabase.js";
 
-export const deleteTeacherDataService = async (dataId) => {
-  const data_id = dataId;
+export const deleteTeacherDataService = async (identifier) => {
+  const data_id = identifier;
   if (!data_id) throw new Error("data id is required.");
 
   try {
@@ -10,7 +10,9 @@ export const deleteTeacherDataService = async (dataId) => {
       .delete()
       .eq("guru_id", data_id);
 
-    if (result.error != undefined) throw result.error;
+    if (result.error != undefined) {
+      console.error(result.error.message);
+    }
 
     return result;
   } catch (error) {

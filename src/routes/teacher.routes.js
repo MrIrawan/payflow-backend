@@ -16,6 +16,6 @@ route.get("/teacher/gender/:gender", getTeacherDataByGenderController);
 route.get("/teacher/:teacher_id", getTeacherDataByIdController);
 route.get("/teacher", searchTeacherDataController);
 route.put("/update/t/:id", updateTeacherDataController);
-route.delete("/delete/t/:id", deleteTeacherDataController);
+route.delete("/delete/t/:teacher_id", deleteTeacherDataController);
 
 export default route;
