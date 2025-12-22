@@ -74,6 +74,22 @@ export const signInWithEmailController = async (req, res, next) => {
     signInData.data.email_address,
     signInData.data.password_email
   );
+  const { access_token, refresh_token } = result.session;
+
+  res.cookie("accessToken", access_token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: 60 * 60 * 1000,
+  });
+
+  res.cookie("refreshToken", refresh_token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
+
   const payload = successPayload(result);
   res.json({
     success: true,
