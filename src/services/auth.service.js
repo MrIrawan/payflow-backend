@@ -21,14 +21,15 @@ export const signUpService = async (data) => {
       .from("data_guru")
       .insert({
         guru_id: signUpData.user.id,
-        nama_lengkap: mergeName(
+        full_name: mergeName(
           signUpData.user.user_metadata.user_data_object.first_name,
           signUpData.user.user_metadata.user_data_object.last_name
         ),
         date_of_birth:
           signUpData.user.user_metadata.user_data_object.date_of_birth,
-        jenis_kelamin:
-          signUpData.user.user_metadata.user_data_object.jenis_kelamin,
+        gender:
+          signUpData.user.user_metadata.user_data_object.gender,
+        email_address: signUpData.user.user_metadata.user_data_object.email_address,
       });
 
     if (insertError) throw insertError;

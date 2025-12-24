@@ -10,10 +10,7 @@ export const updateTeacherDataService = async (data, identifier) => {
   try {
     const response = await supabase
       .from("data_guru")
-      .update({
-        nama_lengkap: mergeName(updateData.first_name, updateData.last_name),
-        ...updateData,
-      })
+      .update(updateData)
       .eq("guru_id", userId)
       .select();
 
