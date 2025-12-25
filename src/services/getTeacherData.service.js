@@ -43,7 +43,7 @@ export const getTeacherDataByGenderService = async (identifier) => {
     const response = await supabase
       .from("data_guru")
       .select("*")
-      .eq("jenis_kelamin", gender);
+      .eq("gender", gender);
 
     return response;
   } catch (error) {
