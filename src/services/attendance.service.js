@@ -12,7 +12,7 @@ export const storeAttendanceService = async (data) => {
   }
 
   try {
-    const { data, error } = await supabase
+    const response = await supabase
       .from("absensi")
       .insert({
         ...attendanceData,
@@ -23,11 +23,7 @@ export const storeAttendanceService = async (data) => {
       .select("*")
       .single();
 
-    if (error) {
-      throw new Error(error.message);
-    }
-
-    return data;
+    return response;
   } catch (error) {
     console.error("error attendance service", error);
   }

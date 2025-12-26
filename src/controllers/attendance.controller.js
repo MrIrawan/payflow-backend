@@ -68,11 +68,20 @@ export const storeAttendanceController = async (request, response) => {
 
   const storeAttendance = await storeAttendanceService(attendanceData.data);
 
-  response.status(201).json({
+  if (storeAttendance.error) {
+    response.status(storeAttendance.status).json({
+      success: false,
+      statusText: storeAttendance.statusText,
+      message: storeAttendance.message,
+      details: storeAttendance.details
+    })
+  }
+
+  response.status(storeAttendance.status).json({
     success: true,
-    statusText: "Created",
+    statusText: storeAttendance.statusText,
     message: "success to store attendance data",
-    data: storeAttendance,
+    data: storeAttendance.data,
   });
 };
 
