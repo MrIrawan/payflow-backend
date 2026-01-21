@@ -6,13 +6,11 @@ import {
   getTeacherDataController,
   getTeacherDataByIdController,
 } from "../controllers/getTeacherData.controller.js";
-import { searchTeacherDataController } from "../controllers/searchTeacherData.controller.js";
 
 const route = Router();
 
 route.get("/teachers", getTeacherDataController);
 route.get("/teacher/:teacher_id", getTeacherDataByIdController);
-route.get("/teacher", searchTeacherDataController);
 route.put("/update/t/:teacher_id", updateTeacherDataController);
 route.delete("/delete/t/:teacher_id", deleteTeacherDataController);
 
