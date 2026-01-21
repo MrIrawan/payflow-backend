@@ -31,26 +31,3 @@ export const getTeacherDataByIdService = async (identifier) => {
     throw error;
   }
 };
-
-export const getTeacherDataByGenderService = async (identifier) => {
-  const gender = identifier;
-
-  if (!gender) {
-    throw new Error("gender is required.");
-  }
-
-  try {
-    const response = await supabase
-      .from("data_guru")
-      .select("*")
-      .eq("gender", gender);
-
-    return response;
-  } catch (error) {
-    console.error(
-      "get teacher by gender service error:",
-      error?.message || error
-    );
-    throw error;
-  }
-};
