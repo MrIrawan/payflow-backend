@@ -20,7 +20,6 @@ export const signUpService = async (data) => {
     const { data, error: insertError } = await supabase
       .from("data_guru")
       .insert({
-        guru_id: signUpData.user.id,
         full_name: mergeName(
           signUpData.user.user_metadata.user_data_object.first_name,
           signUpData.user.user_metadata.user_data_object.last_name

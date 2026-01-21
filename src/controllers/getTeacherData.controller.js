@@ -1,7 +1,6 @@
 import {
   getTeacherDataService,
   getTeacherDataByIdService,
-  getTeacherDataByGenderService,
 } from "../services/getTeacherData.service.js";
 
 export const getTeacherDataController = async (request, response) => {

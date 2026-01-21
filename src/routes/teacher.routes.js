@@ -1,5 +1,6 @@
 import { Router } from "express";
 
+import { storeTeacherDataController } from "../controllers/storeTeacherData.controller.js";
 import { updateTeacherDataController } from "../controllers/updateTeacherData.controller.js";
 import { deleteTeacherDataController } from "../controllers/deleteTeacherData.controller.js";
 import {
@@ -9,6 +10,7 @@ import {
 
 const route = Router();
 
+route.post("/store/teacher", storeTeacherDataController);
 route.get("/teachers", getTeacherDataController);
 route.get("/teacher/:teacher_id", getTeacherDataByIdController);
 route.put("/update/t/:teacher_id", updateTeacherDataController);
