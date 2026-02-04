@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { verifyToken } from "../middleware/verifyToken.js";
+import { isAuthenticate } from "../middleware/isAuthenticate.js";
 
 import { storeAttendanceController } from "../controllers/attendance.controller.js";
 import { updateAttendanceController } from "../controllers/attendance.controller.js";
@@ -9,10 +9,10 @@ import { getAttendanceByDateController } from "../controllers/attendance.control
 
 const route = Router();
 
-route.get("/attendance", getAllAttendanceController);
-route.get("attendance/date", getAttendanceByDateController);
-route.post("/attendance/store", storeAttendanceController);
-route.put("/attendance/update/:attendance_id", updateAttendanceController);
-route.delete("/attendance/delete/:attendance_id", deleteAttendanceController);
+route.get("/attendance", isAuthenticate, getAllAttendanceController);
+route.get("attendance/date", isAuthenticate, getAttendanceByDateController);
+route.post("/attendance/store", isAuthenticate, storeAttendanceController);
+route.put("/attendance/update/:attendance_id", isAuthenticate, updateAttendanceController);
+route.delete("/attendance/delete/:attendance_id", isAuthenticate, deleteAttendanceController);
 
 export default route;
