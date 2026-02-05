@@ -1,20 +1,21 @@
+import jwt from "jsonwebtoken";
+
 export function isAuthenticated(req, res, next) {
     const accessToken = req.cookies.accessToken;
 
-    // 1. Tidak ada access token sama sekali
     if (!accessToken) {
-        return res.status(401).json({
-            message: "Unauthenticated"
-        });
+        return res.status(401).json({ message: "Unauthenticated" });
     }
 
-    /**
-     * 2. JANGAN:
-     * - jwt.verify
-     * - cek expired
-     * - refresh di sini
-     *
-     * Middleware hanya gatekeeper
-     */
-    next();
+    try {
+        const payload = jwt.verify(
+            accessToken,
+            process.env.SUPABASE_JWT_SECRET
+        );
+
+        req.user = payload;
+        next();
+    } catch {
+        return res.status(401).json({ message: "Access token expired" });
+    }
 }

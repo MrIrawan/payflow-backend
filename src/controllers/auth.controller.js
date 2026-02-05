@@ -80,7 +80,7 @@ export const signInWithEmailController = async (req, res, next) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
-    maxAge: 60 * 60 * 1000,
+    maxAge: 30 * 1000,
   });
 
   res.cookie("refreshToken", refresh_token, {
