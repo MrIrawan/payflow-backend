@@ -1,4 +1,4 @@
-import { refreshSessionService } from "../services/refreshSession.service";
+import { refreshSessionService } from "../services/refreshSession.service.js";
 
 export async function refreshSessionController(req, res) {
     const refreshToken = req.cookies.refreshToken;
@@ -38,7 +38,7 @@ export async function refreshSessionController(req, res) {
         });
     } catch (err) {
         return res.status(401).json({
-            message: "Invalid or expired refresh token"
+            message: "Invalid or expired refresh token",
         });
     }
 }
