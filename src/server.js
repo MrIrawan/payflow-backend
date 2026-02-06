@@ -8,6 +8,7 @@ import authRoute from "./routes/auth.routes.js";
 import teacherRoute from "./routes/teacher.routes.js";
 import attendanceRoute from "./routes/attendance.route.js";
 import refreshSessionRoute from "./routes/refreshSession.route.js";
+import adminAuthRoute from "./routes/adminAuth.route.js";
 
 const app = express();
 const PORT = process.env.SERVER_PORT || 8800;
@@ -27,6 +28,7 @@ app.use("/api/v1", authRoute);
 app.use("/api/v1", teacherRoute);
 app.use("/api/v1", attendanceRoute);
 app.use("/api/v1", refreshSessionRoute);
+app.use("/api/v1/admin", adminAuthRoute);
 
 app.get("/", (req, res) => {
   res.json({
