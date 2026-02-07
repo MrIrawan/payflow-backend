@@ -7,14 +7,14 @@ import {
   getTeacherDataController,
   getTeacherDataByIdController,
 } from "../controllers/getTeacherData.controller.js";
-import { isAuthenticated } from "../middleware/isAuthenticated.js";
+import { isAdminAuthenticated } from "../middleware/isAdminAuthenticated.js";
 
 const route = Router();
 
-route.post("/store/teacher", isAuthenticated, storeTeacherDataController);
-route.get("/teachers", isAuthenticated, getTeacherDataController);
-route.get("/teacher/:teacher_id", isAuthenticated, getTeacherDataByIdController);
-route.put("/update/t/:teacher_id", isAuthenticated, updateTeacherDataController);
-route.delete("/delete/t/:teacher_id", isAuthenticated, deleteTeacherDataController);
+route.post("/store/teacher", isAdminAuthenticated, storeTeacherDataController);
+route.get("/teachers", isAdminAuthenticated, getTeacherDataController);
+route.get("/teacher/:teacher_id", isAdminAuthenticated, getTeacherDataByIdController);
+route.put("/update/t/:teacher_id", isAdminAuthenticated, updateTeacherDataController);
+route.delete("/delete/t/:teacher_id", isAdminAuthenticated, deleteTeacherDataController);
 
 export default route;
