@@ -110,10 +110,19 @@ export const updateAttendanceController = async (request, response) => {
     request.params.attendance_id
   );
 
-  response.status(200).json({
+  if (updateAttendance.error) {
+    return response.status(updateAttendance.status).json({
+      success: false,
+      statusText: updateAttendance.statusText,
+      message: updateAttendance.message,
+      errors: updateAttendance.error,
+    })
+  }
+
+  return response.status(200).json({
     success: true,
-    message: "success to update attendance data",
-    data: updateAttendance,
+    message: "update data absensi yang kamu lakukan berhasil!",
+    data: updateAttendance.data,
   });
 };
 

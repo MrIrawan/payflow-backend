@@ -29,30 +29,31 @@ export const storeAttendanceService = async (data) => {
   }
 };
 
-export const updateAttendanceService = async (updateData, attendanceId) => {
-  if (!updateData && attendanceId) {
-    throw new Error(
-      "unable to access this service, update data and attendance id is required"
-    );
+export const updateAttendanceService = async (data, identifier) => {
+  const attendanceUpdateData = data;
+  const attendanceId = identifier;
+
+  if (attendanceUpdateData.checkin_time) {
+    attendanceUpdateData.checkin_time = formatTime(attendanceUpdateData.checkin_time)
+  } else {
+    delete attendanceUpdateData.checkin_time;
+  }
+
+  if (attendanceUpdateData.checkout_time) {
+    attendanceUpdateData.checkout_time = formatTime(attendanceUpdateData.checkout_time)
+  } else {
+    delete attendanceUpdateData.checkout_time;
   }
 
   try {
-    const { data, error } = await supabase
+    const response = await supabase
       .from("absensi")
-      .update({
-        ...updateData,
-        checkin_time: formatTime(updateData.checkin_time),
-        checkout_time: formatTime(updateData.checkout_time),
-      })
+      .update(attendanceUpdateData)
       .eq("attendance_id", attendanceId)
       .select()
       .single();
 
-    if (error) {
-      console.error(error.message);
-    }
-
-    return data;
+    return response;
   } catch (error) {
     console.error("update attendance error :", error);
   }
