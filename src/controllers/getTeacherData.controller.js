@@ -1,7 +1,7 @@
 import {
   getTeacherDataService,
   getTeacherDataByIdService,
-} from "../services/getTeacherData.service.js";
+} from "../services/admin/getTeacherData.service.js";
 
 export const getTeacherDataController = async (request, response) => {
   const result = await getTeacherDataService();

@@ -1,6 +1,6 @@
-import { supabase } from "../lib/supabase.js";
-import { formatDate } from "../utils/formatDate.js";
-import { formatTime } from "../utils/formatTime.js";
+import { supabase } from "../../lib/supabase.js";
+import { formatDate } from "../../utils/formatDate.js";
+import { formatTime } from "../../utils/formatTime.js";
 
 export const storeAttendanceService = async (data) => {
   const attendanceData = data;

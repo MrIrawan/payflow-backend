@@ -1,11 +1,11 @@
 import { attendanceSchema } from "../models/attendance.schema.js";
 import { updateAttendanceSchema } from "../models/attendance.schema.js";
 
-import { storeAttendanceService } from "../services/attendance.service.js";
-import { updateAttendanceService } from "../services/attendance.service.js";
-import { deleteAttendanceService } from "../services/attendance.service.js";
-import { getAllAttendanceService } from "../services/attendance.service.js";
-import { getAttendanceByDateService } from "../services/attendance.service.js";
+import { storeAttendanceService } from "../services/admin/attendance.service.js";
+import { updateAttendanceService } from "../services/admin/attendance.service.js";
+import { deleteAttendanceService } from "../services/admin/attendance.service.js";
+import { getAllAttendanceService } from "../services/admin/attendance.service.js";
+import { getAttendanceByDateService } from "../services/admin/attendance.service.js";
 
 import { isWithinAcceptableRadius } from "../utils/calculateDistance.js";
 
