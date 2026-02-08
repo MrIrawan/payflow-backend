@@ -28,14 +28,21 @@ export const updateTeacherDataController = async (request, response) => {
     });
   }
 
-  const result = await updateTeacherDataService(userDataObject.data, teacherId);
+  const { teacherUpdate, validateUser } = await updateTeacherDataService(userDataObject.data, teacherId);
 
-  if (result.error) {
-    return response.status(result.status).json({
+  if (validateUser.error) {
+    return response.status(validateUser.status).json({
       success: false,
-      statusText: result.statusText,
-      message: result.error.message,
-      details: result.error.details,
+      statusText: validateUser.statusText,
+    });
+  }
+
+  if (teacherUpdate.error) {
+    return response.status(teacherUpdate.status).json({
+      success: false,
+      statusText: teacherUpdate.statusText,
+      message: teacherUpdate.error.message,
+      details: teacherUpdate.error.details,
     });
   }
 
@@ -43,6 +50,6 @@ export const updateTeacherDataController = async (request, response) => {
     success: true,
     statusText: "Ok",
     message: `update data guru yang kamu lakukan telah berhasil.`,
-    data: result.data,
+    data: teacherUpdate.data,
   });
 };
