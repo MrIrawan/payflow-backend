@@ -6,11 +6,13 @@ import { updateAttendanceController } from "../controllers/attendance.controller
 import { getAllAttendanceController } from "../controllers/attendance.controller.js";
 import { deleteAttendanceController } from "../controllers/attendance.controller.js";
 import { getAttendanceByDateController } from "../controllers/attendance.controller.js";
+import { getAttendanceChartController } from "../controllers/attendance/getAttendanceChart.controller.js";
 
 const route = Router();
 
 route.get("/attendance", isAdminAuthenticated, getAllAttendanceController);
-route.get("attendance/date", isAdminAuthenticated, getAttendanceByDateController);
+route.get("/attendance/chart", getAttendanceChartController);
+route.get("/attendance/date", isAdminAuthenticated, getAttendanceByDateController);
 route.post("/attendance/store", isAdminAuthenticated, storeAttendanceController);
 route.put("/attendance/update/:attendance_id", isAdminAuthenticated, updateAttendanceController);
 route.delete("/attendance/delete/:attendance_id", isAdminAuthenticated, deleteAttendanceController);
