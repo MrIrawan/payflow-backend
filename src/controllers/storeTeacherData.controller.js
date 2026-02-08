@@ -21,21 +21,33 @@ export const storeTeacherDataController = async (request, response) => {
         });
     }
 
-    const storeTeacherData = await storeTeacherDataService(teacherData.data);
+    const { teacherAuth, teacherMetadata } = await storeTeacherDataService(teacherData.data);
 
-    if (storeTeacherData.error) {
-        return response.status(storeTeacherData.status).json({
+    if (teacherAuth.error) {
+        return response.status(teacherAuth.status).json({
             success: false,
-            statusText: storeTeacherData.statusText,
+            statusText: teacherAuth.statusText,
             message: "failed to store teacher data.",
-            details: storeTeacherData.error,
+            details: teacherAuth.error,
         });
     }
 
-    return response.status(storeTeacherData.status).json({
+    if (teacherMetadata.error) {
+        return response.status(teacherMetadata.status).json({
+            success: false,
+            statusText: teacherMetadata.statusText,
+            message: "failed to store teacher data.",
+            details: teacherMetadata.error,
+        });
+    }
+
+    return response.status(201).json({
         success: true,
-        statusText: storeTeacherData.statusText,
+        statusText: "Created",
         message: "success to store teacher data.",
-        data: storeTeacherData.data,
-    })
+        data: {
+            ...teacherMetadata.data,
+            email_address: teacherAuth.data.user.email,
+        },
+    });
 }
