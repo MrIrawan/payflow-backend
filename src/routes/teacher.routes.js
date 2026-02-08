@@ -11,10 +11,10 @@ import { isAdminAuthenticated } from "../middleware/isAdminAuthenticated.js";
 
 const route = Router();
 
-route.post("/store/teacher", isAdminAuthenticated, storeTeacherDataController);
-route.get("/teachers", isAdminAuthenticated, getTeacherDataController);
-route.get("/teacher/:teacher_id", isAdminAuthenticated, getTeacherDataByIdController);
-route.put("/update/t/:teacher_id", isAdminAuthenticated, updateTeacherDataController);
-route.delete("/delete/t/:teacher_id", isAdminAuthenticated, deleteTeacherDataController);
+route.post("/store/teacher", storeTeacherDataController);
+route.get("/teachers", getTeacherDataController);
+route.get("/teacher/:teacher_id", getTeacherDataByIdController);
+route.put("/update/t/:teacher_id", updateTeacherDataController);
+route.delete("/delete/t/:teacher_id", deleteTeacherDataController);
 
 export default route;

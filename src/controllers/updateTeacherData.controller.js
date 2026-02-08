@@ -31,7 +31,7 @@ export const updateTeacherDataController = async (request, response) => {
   const result = await updateTeacherDataService(userDataObject.data, teacherId);
 
   if (result.error) {
-    response.status(result.status).json({
+    return response.status(result.status).json({
       success: false,
       statusText: result.statusText,
       message: result.error.message,
@@ -39,10 +39,10 @@ export const updateTeacherDataController = async (request, response) => {
     });
   }
 
-  response.status(200).json({
-    success: false,
+  return response.status(200).json({
+    success: true,
     statusText: "Ok",
-    message: `teacher data with id <${teacherId}> successfully updated.`,
+    message: `update data guru yang kamu lakukan telah berhasil.`,
     data: result.data,
   });
 };

@@ -1,5 +1,4 @@
 import { supabase } from "../../lib/supabase.js";
-import { mergeName } from "../../utils/mergeName.js";
 
 export const storeTeacherDataService = async (dataObject) => {
     const teacherData = dataObject;
