@@ -1,6 +1,6 @@
 import { supabase } from "../../../lib/supabase.js";
 
-export const getUserProfileService = async (guruId) => {
+export const getUserProfileService = async (teacherEmail) => {
     const now = new Date();
     const month = now.getMonth() + 1;
     const year = now.getFullYear();
@@ -11,7 +11,7 @@ export const getUserProfileService = async (guruId) => {
     const { data: profile, error: profileError } = await supabase
         .from("data_guru")
         .select("*")
-        .eq("guru_id", guruId)
+        .eq("email_address", teacherEmail)
         .single();
 
     if (profileError) throw profileError;
@@ -43,8 +43,8 @@ export const getUserProfileService = async (guruId) => {
     });
 
     /* =============================
-       3. ATTENDANCE CHART (YEAR)
-    ============================= */
+        3. ATTENDANCE CHART (YEAR)
+     ============================= */
     const chart = Array.from({ length: 12 }, (_, i) => ({
         month: i + 1,
         present: 0,
@@ -54,8 +54,8 @@ export const getUserProfileService = async (guruId) => {
 
     const { data: yearlyAttendance } = await supabase
         .from("absensi")
-        .select("status, attendance_date")
-        .eq("guru_id", guruId)
+        .select("attendance_status, attendance_date")
+        .eq("teacher_name", teacherName)
         .gte("attendance_date", new Date(year, 0, 1).toISOString())
         .lte("attendance_date", new Date(year, 11, 31).toISOString());
 
@@ -67,8 +67,8 @@ export const getUserProfileService = async (guruId) => {
     });
 
     /* =============================
-       4. SALARY CALCULATION (SERVER)
-    ============================= */
+        4. SALARY CALCULATION (SERVER)
+     ============================= */
     const BASE_SALARY = 3_000_000; // contoh
     const DAILY_RATE = BASE_SALARY / 22;
 

@@ -2,12 +2,13 @@ import { getUserProfileService } from "../../../services/user/profile/getUserPro
 
 export const getUserProfileController = async (req, res) => {
     try {
-        const guruId = req.user.guru_id; // dari auth middleware
+        const teacherEmail = req.user.user_metadata.email; // dari auth middleware
 
-        const data = await getUserProfileService(guruId);
+        const data = await getUserProfileService(teacherEmail);
 
         return res.status(200).json({
             success: true,
+            teacherEmail,
             data,
         });
     } catch (error) {
