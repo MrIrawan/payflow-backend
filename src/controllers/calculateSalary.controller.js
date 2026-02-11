@@ -2,10 +2,12 @@ import { calculatePayrollSchema } from "../models/calculatePayroll.schema.js";
 import { calculateSalaryService } from "../services/calculateSalary.service.js";
 
 export const calculateSalaryController = async (req, res) => {
-    try {
-        const { teacherId, totalWeeklyHours, month, year } = req.body;
+    const teacherEmail = req.user.user_metadata.email;
 
-        if (!teacherId || !totalWeeklyHours || !month || !year) {
+    try {
+        const { totalWeeklyHours, month, year } = req.body;
+
+        if (!teacherEmail || !totalWeeklyHours || !month || !year) {
             return res.status(400).json({ error: "Data input tidak lengkap" });
         }
 
