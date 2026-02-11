@@ -13,6 +13,8 @@ import adminAuthRoute from "./routes/adminAuth.route.js";
 import teacherProfileRoute from "./routes/user/profile/getUserProfile.route.js";
 import editTeacherProfile from "./routes/user/profile/editUserProfile.route.js";
 
+import calculateSalaryRoute from "./routes/calculateSalary.route.js";
+
 const app = express();
 const PORT = process.env.SERVER_PORT || 8800;
 
@@ -35,6 +37,8 @@ app.use("/api/v1/admin", adminAuthRoute);
 
 app.use("/api/v1", teacherProfileRoute);
 app.use("/api/v1", editTeacherProfile);
+
+app.use("/api/v1", calculateSalaryRoute);
 
 app.get("/", (req, res) => {
   res.json({
