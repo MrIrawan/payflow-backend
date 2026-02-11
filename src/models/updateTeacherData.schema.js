@@ -4,7 +4,10 @@ export const updateTeacherDataSchema = z.object({
   full_name: z.string().min(3, "Full name must be at least 3 characters long.").optional(),
   date_of_birth: z.coerce.date("Date of birth is required.").optional(),
   home_address: z.string().min(10, "Home address must be at least 10 characters long.").optional().optional(),
-  job_title: z.string().min(3, "Job title must be at least 3 characters long.").array().optional(),
+  job_title: z.enum([
+    "Kepala Sekolah", "Kurikulum", "Kesiswaan", "Bendahara", "BK",
+    "Kaprok RPL", "Kaprok MPLB", "DU/DI", "Tata Usaha", "Guru"
+  ]).array().optional(),
   company: z.string().min(3, "Company name must be at least 3 characters long.").optional().optional(),
   gender: z.enum(["male", "female"], "Gender is required, please choose between 'male' or 'female'").optional(),
   subject_name: z.enum([
