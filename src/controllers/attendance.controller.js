@@ -25,14 +25,14 @@ export const getAllAttendanceController = async (request, response) => {
 
 export const storeAttendanceController = async (request, response) => {
   if (!request.body) {
-    response.json({
+    return response.json({
       success: false,
       message: "failed to handle store attendance, attendance data is required",
     });
   }
 
   if (!request.body.location) {
-    response.status(406).json({
+    return response.status(406).json({
       success: false,
       statusText: "Not acceptable",
       message:
@@ -49,7 +49,7 @@ export const storeAttendanceController = async (request, response) => {
   );
 
   if (!validateLocation.isValid) {
-    response.status(403).json({
+    return response.status(403).json({
       success: false,
       statusText: "Forbidden",
       message: `you are ${validateLocation.distance}m away from school. maximum allowed distance: ${validateLocation.radiusLimit}m.`,
@@ -59,7 +59,7 @@ export const storeAttendanceController = async (request, response) => {
   const attendanceData = attendanceSchema.safeParse(request.body);
 
   if (attendanceData.error) {
-    response.status(400).json({
+    return response.status(400).json({
       success: false,
       statusText: "Bad Request",
       message: attendanceData.error.issues,
@@ -69,7 +69,7 @@ export const storeAttendanceController = async (request, response) => {
   const storeAttendance = await storeAttendanceService(attendanceData.data);
 
   if (storeAttendance.error) {
-    response.status(storeAttendance.status).json({
+    return response.status(storeAttendance.status).json({
       success: false,
       statusText: storeAttendance.statusText,
       message: storeAttendance.message,
@@ -77,7 +77,7 @@ export const storeAttendanceController = async (request, response) => {
     })
   }
 
-  response.status(storeAttendance.status).json({
+  return response.status(storeAttendance.status).json({
     success: true,
     statusText: storeAttendance.statusText,
     message: "success to store attendance data",
