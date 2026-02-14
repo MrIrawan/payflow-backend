@@ -4,15 +4,18 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import "dotenv/config";
 
-import authRoute from "./routes/auth.routes.js";
-import logoutRoute from "./routes/logout.route.js";
-import teacherRoute from "./routes/teacher.routes.js";
-import attendanceRoute from "./routes/attendance.route.js";
-import refreshSessionRoute from "./routes/refreshSession.route.js";
-import adminAuthRoute from "./routes/adminAuth.route.js";
+// admin routes
+import adminAuthRoute from "./routes/admin/auth/adminAuth.route.js";
+import teacherRoute from "./routes/admin/teacher/teacher.routes.js";
+import attendanceRoute from "./routes/admin/attendance/attendance.route.js";
 
+// user endpoints
+import authRoute from "./routes/user/auth/auth.routes.js";
 import teacherProfileRoute from "./routes/user/profile/getUserProfile.route.js";
 import editTeacherProfile from "./routes/user/profile/editUserProfile.route.js";
+
+import refreshSessionRoute from "./routes/refreshSession.route.js";
+import logoutRoute from "./routes/logout.route.js";
 
 import calculateSalaryRoute from "./routes/calculateSalary.route.js";
 import payrollCalcRoute from "./routes/payrollCalc.route.js";
@@ -30,19 +33,15 @@ app.use(
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-// mount routes under /api/v1
-app.use("/api/v1", authRoute);
-app.use("/api/v1", logoutRoute);
-app.use("/api/v1", teacherRoute);
-app.use("/api/v1", attendanceRoute);
-app.use("/api/v1", refreshSessionRoute);
-app.use("/api/v1/admin", adminAuthRoute);
+// admin endpoint
+app.use("/api/admin", adminAuthRoute);
+app.use("/api/admin", teacherRoute);
+app.use("/api/admin", attendanceRoute);
 
-app.use("/api/v1", teacherProfileRoute);
-app.use("/api/v1", editTeacherProfile);
-
-app.use("/api/v1", calculateSalaryRoute);
-app.use("/api/v1/payroll-calc", payrollCalcRoute);
+// user endpoint
+app.use("/api/employee", authRoute);
+app.use("/api/employee", teacherProfileRoute);
+app.use("/api/employee", editTeacherProfile);
 
 app.get("/", (req, res) => {
   res.json({
