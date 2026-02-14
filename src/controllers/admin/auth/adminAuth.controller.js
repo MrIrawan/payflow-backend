@@ -1,7 +1,7 @@
 import {
-    validateAdminCredential,
     generateAdminToken,
-} from "../services/adminAuth.service.js";
+    validateAdminCredential
+} from "../../../services/admin/auth/adminAuth.service";
 
 export async function adminLoginController(req, res) {
     try {
