@@ -6,4 +6,4 @@ const router = express.Router();
 export default router;
 
 // Endpoint: POST /api/payroll/calculate
-router.post('/calculate', isAuthenticated, calculateSalaryController);
+router.post('/calculate', calculateSalaryController);

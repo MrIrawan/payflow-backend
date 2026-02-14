@@ -2,20 +2,28 @@ import { getUserProfileService } from "../../../services/user/profile/getUserPro
 
 export const getUserProfileController = async (req, res) => {
     try {
-        const teacherEmail = req.user.user_metadata.email; // dari auth middleware
+        // Cek struktur req.user dari middleware
+        // Biasanya payload JWT Supabase langsung punya field 'email'
+        const teacherEmail = req.user.email || req.user.user_metadata?.email;
+
+        if (!teacherEmail) {
+            return res.status(400).json({
+                success: false,
+                message: "Email not found in token payload",
+            });
+        }
 
         const data = await getUserProfileService(teacherEmail);
 
         return res.status(200).json({
             success: true,
-            teacherEmail,
-            data,
+            data: data, // Langsung data object biar frontend enak ambilnya
         });
     } catch (error) {
+        console.error("Profile Error:", error); // Log error di terminal server
         return res.status(500).json({
             success: false,
-            message: "Failed to fetch user profile",
-            error: error.message,
+            message: error.message || "Internal Server Error",
         });
     }
 };

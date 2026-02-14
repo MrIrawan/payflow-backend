@@ -5,6 +5,7 @@ import cors from "cors";
 import "dotenv/config";
 
 import authRoute from "./routes/auth.routes.js";
+import logoutRoute from "./routes/logout.route.js";
 import teacherRoute from "./routes/teacher.routes.js";
 import attendanceRoute from "./routes/attendance.route.js";
 import refreshSessionRoute from "./routes/refreshSession.route.js";
@@ -14,6 +15,7 @@ import teacherProfileRoute from "./routes/user/profile/getUserProfile.route.js";
 import editTeacherProfile from "./routes/user/profile/editUserProfile.route.js";
 
 import calculateSalaryRoute from "./routes/calculateSalary.route.js";
+import payrollCalcRoute from "./routes/payrollCalc.route.js";
 
 const app = express();
 const PORT = process.env.SERVER_PORT || 8800;
@@ -30,6 +32,7 @@ app.use(cookieParser());
 
 // mount routes under /api/v1
 app.use("/api/v1", authRoute);
+app.use("/api/v1", logoutRoute);
 app.use("/api/v1", teacherRoute);
 app.use("/api/v1", attendanceRoute);
 app.use("/api/v1", refreshSessionRoute);
@@ -39,6 +42,7 @@ app.use("/api/v1", teacherProfileRoute);
 app.use("/api/v1", editTeacherProfile);
 
 app.use("/api/v1", calculateSalaryRoute);
+app.use("/api/v1/payroll-calc", payrollCalcRoute);
 
 app.get("/", (req, res) => {
   res.json({

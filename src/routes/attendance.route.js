@@ -10,7 +10,7 @@ import { getAttendanceChartController } from "../controllers/attendance/getAtten
 
 const route = Router();
 
-route.get("/attendance", isAdminAuthenticated, getAllAttendanceController);
+route.get("/attendance", getAllAttendanceController);
 route.get("/attendance/chart", getAttendanceChartController);
 route.get("/attendance/date", isAdminAuthenticated, getAttendanceByDateController);
 route.post("/attendance/store", isAdminAuthenticated, storeAttendanceController);

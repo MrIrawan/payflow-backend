@@ -2,7 +2,7 @@ import { calculatePayrollSchema } from "../models/calculatePayroll.schema.js";
 import { calculateSalaryService } from "../services/calculateSalary.service.js";
 
 export const calculateSalaryController = async (req, res) => {
-    const teacherEmail = req.user.user_metadata.email;
+    const teacherEmail = req.query.teacherEmail;
 
     try {
         const { totalWeeklyHours, month, year } = req.body;
