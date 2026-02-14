@@ -1,4 +1,4 @@
-import { updateTeacherDataSchema } from "../models/updateTeacherData.schema.js";
+import { updateTeacherDataSchema } from "../../../models/updateTeacherData.schema.js";
 import { updateTeacherDataService } from "../services/admin/updateTeacherData.service.js";
 
 export const updateTeacherDataController = async (request, response) => {

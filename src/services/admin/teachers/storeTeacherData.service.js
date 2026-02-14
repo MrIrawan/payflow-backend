@@ -1,5 +1,5 @@
-import { supabase } from "../../lib/supabase.js";
-import { supabaseAdmin } from "../../lib/supabaseAdmin.js";
+import { supabase } from "../../../lib/supabase.js";
+import { supabaseAdmin } from "../../../lib/supabaseAdmin.js";
 
 export const storeTeacherDataService = async (dataObject) => {
     const {

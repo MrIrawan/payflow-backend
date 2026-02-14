@@ -1,13 +1,13 @@
 // import schema validation
-import { signUpSchema } from "../models/auth.schema.js";
-import { signInWithEmailSchema } from "../models/auth.schema.js";
+import { signUpSchema } from "../../../models/auth.schema.js";
+import { signInWithEmailSchema } from "../../../models/auth.schema.js";
 // import module services
 import {
   signInWithEmailService,
   signUpService,
 } from "../services/auth.service.js";
 // import utils function to help controllers
-import { successPayload } from "../utils/succesPayload.js";
+import { successPayload } from "../../../utils/succesPayload.js";
 
 export const signUpController = async (req, res, next) => {
   if (!req.body) {

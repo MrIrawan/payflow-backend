@@ -1,4 +1,4 @@
-import { getAttendanceChartService } from "../../services/admin/attendance/getAttendanceChart.js";
+import { getAttendanceChartService } from "../../../services/admin/attendance/getAttendanceChart.js";
 
 export const getAttendanceChartController = async (req, res) => {
     try {

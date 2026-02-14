@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { isAdminAuthenticated } from "../middleware/isAdminAuthenticated.js";
+import { isAdminAuthenticated } from "../../../middleware/isAdminAuthenticated.js";
 
 import { storeAttendanceController } from "../controllers/attendance.controller.js";
 import { updateAttendanceController } from "../controllers/attendance.controller.js";

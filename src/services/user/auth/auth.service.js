@@ -1,5 +1,5 @@
-import { supabase } from "../lib/supabase.js";
-import { mergeName } from "../utils/mergeName.js";
+import { supabase } from "../../../lib/supabase.js";
+import { mergeName } from "../../../utils/mergeName.js";
 
 export const signUpService = async (data) => {
   const dataObject = data;

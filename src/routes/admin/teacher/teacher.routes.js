@@ -7,7 +7,7 @@ import {
   getTeacherDataController,
   getTeacherDataByIdController,
 } from "../controllers/getTeacherData.controller.js";
-import { isAdminAuthenticated } from "../middleware/isAdminAuthenticated.js";
+import { isAdminAuthenticated } from "../../../middleware/isAdminAuthenticated.js";
 
 const route = Router();
 
