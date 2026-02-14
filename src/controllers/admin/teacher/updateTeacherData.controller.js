@@ -1,5 +1,5 @@
 import { updateTeacherDataSchema } from "../../../models/updateTeacherData.schema.js";
-import { updateTeacherDataService } from "../services/admin/updateTeacherData.service.js";
+import { updateTeacherDataService } from "../../../services/admin/teachers/updateTeacherData.service.js";
 
 export const updateTeacherDataController = async (request, response) => {
   const teacherId = request.params.teacher_id;

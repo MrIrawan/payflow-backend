@@ -1,5 +1,5 @@
 import { storeTeacherDataSchema } from "../../../models/storeTeacherData.schema.js";
-import { storeTeacherDataService } from "../services/admin/storeTeacherData.service.js";
+import { storeTeacherDataService } from "../../../services/admin/teachers/storeTeacherData.service.js";
 
 export const storeTeacherDataController = async (request, response) => {
     if (!request.body) {

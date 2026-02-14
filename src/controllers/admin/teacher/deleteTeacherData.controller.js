@@ -1,4 +1,4 @@
-import { deleteTeacherDataService } from "../services/admin/deleteTeacherData.service.js";
+import { deleteTeacherDataService } from "../../../services/admin/teachers/deleteTeacherData.service.js";
 
 export const deleteTeacherDataController = async (request, response) => {
   const teacherId = request.params.teacher_id;

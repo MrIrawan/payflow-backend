@@ -1,13 +1,12 @@
 import { Router } from "express";
 
-import { storeTeacherDataController } from "../controllers/storeTeacherData.controller.js";
-import { updateTeacherDataController } from "../controllers/updateTeacherData.controller.js";
-import { deleteTeacherDataController } from "../controllers/deleteTeacherData.controller.js";
+import { storeTeacherDataController } from "../../../controllers/admin/teacher/storeTeacherData.controller.js";
+import { updateTeacherDataController } from "../../../controllers/admin/teacher/updateTeacherData.controller.js";
+import { deleteTeacherDataController } from "../../../controllers/admin/teacher/deleteTeacherData.controller.js";
 import {
   getTeacherDataController,
   getTeacherDataByIdController,
-} from "../controllers/getTeacherData.controller.js";
-import { isAdminAuthenticated } from "../../../middleware/isAdminAuthenticated.js";
+} from "../../../controllers/admin/teacher/getTeacherData.controller.js";
 
 const route = Router();
 

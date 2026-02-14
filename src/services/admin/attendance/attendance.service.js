@@ -12,6 +12,20 @@ export const storeAttendanceService = async (data) => {
   }
 
   try {
+    const teacherName = String(attendanceData.teacher_name).toLowerCase();
+
+    const isTeacherExist = await supabase
+      .from("data_guru")
+      .select("full_name")
+      .eq("full_name", teacherName);
+
+    if (isTeacherExist.data.length === 0) {
+      return {
+        success: false,
+        message: "Gagal membuat absensi, guru yang anda maksud tidak terdaftar."
+      };
+    }
+
     const response = await supabase
       .from("absensi")
       .insert({
@@ -23,7 +37,7 @@ export const storeAttendanceService = async (data) => {
       .select("*")
       .single();
 
-    return response;
+    return { isTeacherExist, response };
   } catch (error) {
     console.error("error attendance service", error);
   }

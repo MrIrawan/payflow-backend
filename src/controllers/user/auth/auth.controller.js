@@ -5,7 +5,7 @@ import { signInWithEmailSchema } from "../../../models/auth.schema.js";
 import {
   signInWithEmailService,
   signUpService,
-} from "../services/auth.service.js";
+} from "../../../services/user/auth/auth.service.js";
 // import utils function to help controllers
 import { successPayload } from "../../../utils/succesPayload.js";
 

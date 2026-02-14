@@ -4,7 +4,7 @@ import { Router } from "express";
 import {
   signInWithEmailController,
   signUpController,
-} from "../controllers/auth.controller.js";
+} from "../../../controllers/user/auth/auth.controller.js";
 
 // express Router instance
 const route = Router();

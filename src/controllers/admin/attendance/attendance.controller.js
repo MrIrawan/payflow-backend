@@ -1,11 +1,11 @@
 import { attendanceSchema } from "../../../models/attendance.schema.js";
 import { updateAttendanceSchema } from "../../../models/attendance.schema.js";
 
-import { storeAttendanceService } from "../services/admin/attendance.service.js";
-import { updateAttendanceService } from "../services/admin/attendance.service.js";
-import { deleteAttendanceService } from "../services/admin/attendance.service.js";
-import { getAllAttendanceService } from "../services/admin/attendance.service.js";
-import { getAttendanceByDateService } from "../services/admin/attendance.service.js";
+import { storeAttendanceService } from "../../../services/admin/attendance/attendance.service.js";
+import { updateAttendanceService } from "../../../services/admin/attendance/attendance.service.js";
+import { deleteAttendanceService } from "../../../services/admin/attendance/attendance.service.js";
+import { getAllAttendanceService } from "../../../services/admin/attendance/attendance.service.js";
+import { getAttendanceByDateService } from "../../../services/admin/attendance/attendance.service.js";
 
 import { isWithinAcceptableRadius } from "../../../utils/calculateDistance.js";
 
@@ -40,22 +40,6 @@ export const storeAttendanceController = async (request, response) => {
     });
   }
 
-  const validateLocation = isWithinAcceptableRadius(
-    request.body.location.latitude,
-    request.body.location.longitude,
-    schoolLat,
-    schoolLon,
-    acceptableRadius
-  );
-
-  if (!validateLocation.isValid) {
-    return response.status(403).json({
-      success: false,
-      statusText: "Forbidden",
-      message: `you are ${validateLocation.distance}m away from school. maximum allowed distance: ${validateLocation.radiusLimit}m.`,
-    });
-  }
-
   const attendanceData = attendanceSchema.safeParse(request.body);
 
   if (attendanceData.error) {
@@ -66,23 +50,48 @@ export const storeAttendanceController = async (request, response) => {
     });
   }
 
+  if (attendanceData.data.attendance_status === "present") {
+    const validateLocation = isWithinAcceptableRadius(
+      request.body.location.latitude,
+      request.body.location.longitude,
+      schoolLat,
+      schoolLon,
+      acceptableRadius
+    );
+
+    if (!validateLocation.isValid) {
+      return response.status(403).json({
+        success: false,
+        statusText: "Forbidden",
+        message: `you are ${validateLocation.distance}m away from school. maximum allowed distance: ${validateLocation.radiusLimit}m.`,
+      });
+    }
+
+    return;
+  }
+
   const storeAttendance = await storeAttendanceService(attendanceData.data);
 
-  if (storeAttendance.error) {
-    return response.status(storeAttendance.status).json({
+  if (storeAttendance.success === false) {
+    return response.status(401).json({
       success: false,
-      statusText: storeAttendance.statusText,
-      message: storeAttendance.message,
-      details: storeAttendance.details
+      message: storeAttendance.message
     })
   }
 
-  return response.status(storeAttendance.status).json({
+  if (storeAttendance.response.error) {
+    return response.status(storeAttendance.response.status).json({
+      success: false,
+      message: "Gagal mengajukan absensi.",
+      error: storeAttendance.response.error
+    })
+  }
+
+  return response.status(storeAttendance.response.status).json({
     success: true,
-    statusText: storeAttendance.statusText,
-    message: "success to store attendance data",
-    data: storeAttendance.data,
-  });
+    message: "Sukses mengajukan absensi.",
+    data: storeAttendance.response.data
+  })
 };
 
 export const updateAttendanceController = async (request, response) => {
