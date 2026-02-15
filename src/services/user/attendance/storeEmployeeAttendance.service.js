@@ -3,11 +3,11 @@ import { supabase } from "../../../lib/supabase.js";
 import { formatDate } from "../../../utils/formatDate.js";
 import { formatTime } from "../../../utils/formatTime.js";
 
-export const storeEmployeeAttendance = async (data) => {
+export const storeEmployeeAttendanceService = async (data) => {
     const attendanceData = data;
 
     try {
-        const teacherName = String(attendanceData.teacherName).toLocaleLowerCase();
+        const teacherName = String(attendanceData.teacher_name);
 
         const isTeacherExist = await supabase
             .from("data_guru")
@@ -21,7 +21,7 @@ export const storeEmployeeAttendance = async (data) => {
             }
         }
 
-        const response = await supabase
+        const attendanceResponse = await supabase
             .from("absensi")
             .insert({
                 ...attendanceData,
@@ -31,8 +31,10 @@ export const storeEmployeeAttendance = async (data) => {
             })
             .select();
 
-        return { isTeacherExist, response };
-
+        return {
+            attendanceResponse,
+            isTeacherExist
+        }
     } catch (error) {
         const fetchError = error;
         return fetchError;

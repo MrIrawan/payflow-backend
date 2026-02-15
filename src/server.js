@@ -13,6 +13,7 @@ import attendanceRoute from "./routes/admin/attendance/attendance.route.js";
 import authRoute from "./routes/user/auth/auth.routes.js";
 import teacherProfileRoute from "./routes/user/profile/getUserProfile.route.js";
 import editTeacherProfile from "./routes/user/profile/editUserProfile.route.js";
+import employeeAttendance from "./routes/user/attendance/employeeAttendance.route.js";
 
 const app = express();
 const PORT = process.env.SERVER_PORT || 8800;
@@ -36,6 +37,7 @@ app.use("/api/admin", attendanceRoute);
 app.use("/api/employee", authRoute);
 app.use("/api/employee", teacherProfileRoute);
 app.use("/api/employee", editTeacherProfile);
+app.use("/api/employee", employeeAttendance);
 
 app.get("/", (req, res) => {
   res.json({
