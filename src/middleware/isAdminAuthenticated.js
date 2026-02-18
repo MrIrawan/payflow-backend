@@ -1,21 +1,29 @@
 import jwt from "jsonwebtoken";
 
-export function isAdminAuthenticated(req, res, next) {
-    const adminToken = req.cookies.admin_token;
-
-    if (!adminToken) {
-        return res.status(401).json({ message: "Unauthenticated" });
-    }
-
+export const isAdminAuthenticated = (req, res, next) => {
     try {
-        const payload = jwt.verify(
-            adminToken,
-            process.env.ADMIN_JWT_SECRET
-        );
+        const token = req.cookies.admin_token;
 
-        req.user = payload;
+        if (!token) {
+            return res.status(401).json({ message: "Admin authentication required" });
+        }
+
+        if (!process.env.ADMIN_JWT_SECRET) {
+            console.error("FATAL: ADMIN_JWT_SECRET is missing in .env");
+            return res.status(500).json({ message: "Server configuration error" });
+        }
+
+        const decoded = jwt.verify(token, process.env.ADMIN_JWT_SECRET);
+
+        // Pastikan role admin (Double check isinya)
+        if (decoded.role !== 'admin') {
+            return res.status(403).json({ message: "Access denied: Admins only" });
+        }
+
+        req.user = decoded;
         next();
-    } catch {
-        return res.status(401).json({ message: "Admin token expired" });
+
+    } catch (error) {
+        return res.status(401).json({ message: "Admin session expired" });
     }
-}
+};
