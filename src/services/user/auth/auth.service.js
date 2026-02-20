@@ -1,5 +1,7 @@
 import { supabase } from "../../../lib/supabase.js";
+
 import { mergeName } from "../../../utils/mergeName.js";
+import { formatDate } from "../../../utils/formatDate.js";
 
 export const signUpService = async (data) => {
   const dataObject = data;
@@ -25,7 +27,7 @@ export const signUpService = async (data) => {
           signUpData.user.user_metadata.user_data_object.last_name
         ),
         date_of_birth:
-          signUpData.user.user_metadata.user_data_object.date_of_birth,
+          formatDate(signUpData.user.user_metadata.user_data_object.date_of_birth),
         gender:
           signUpData.user.user_metadata.user_data_object.gender,
         email_address: signUpData.user.user_metadata.user_data_object.email_address,

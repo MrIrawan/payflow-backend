@@ -34,14 +34,14 @@ export const signUpController = async (req, res, next) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
-    maxAge: 60 * 60 * 1000,
+    maxAge: 3600 * 1000,
   });
 
   res.cookie("refreshToken", refresh_token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
-    maxAge: 7 * 24 * 60 * 60 * 1000,
+    maxAge: 7 * 24 * 3600 * 1000,
   });
 
   const payload = successPayload(result);
