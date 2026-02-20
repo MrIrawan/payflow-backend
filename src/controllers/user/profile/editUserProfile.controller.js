@@ -1,5 +1,5 @@
-import { updateTeacherDataSchema } from "../../../models/updateTeacherData.schema.js";
 import { editUserProfileService } from "../../../services/user/profile/editUserProfile.service.js";
+import { editUserProfileSchema } from "../../../models/user/profile/editUserProfile.schema.js";
 
 export const editUserProfile = async (req, res) => {
     const teacherEmail = req.user.user_metadata.email;
@@ -12,7 +12,7 @@ export const editUserProfile = async (req, res) => {
         });
     }
 
-    const validateSchema = updateTeacherDataSchema.safeParse(req.body);
+    const validateSchema = editUserProfileSchema.safeParse(req.body);
 
     console.log(validateSchema)
 

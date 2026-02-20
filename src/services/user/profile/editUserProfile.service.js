@@ -4,9 +4,6 @@ export async function editUserProfileService(identifier, data) {
     const teacherEmail = identifier;
     const updateData = data;
 
-    console.log(data)
-
-    // update teacher service
     const response = await supabase
         .from("data_guru")
         .update(updateData)
