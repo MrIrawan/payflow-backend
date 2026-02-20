@@ -28,21 +28,6 @@ export const signUpController = async (req, res, next) => {
   }
 
   const result = await signUpService(signUpData.data);
-  const { access_token, refresh_token } = result.session;
-
-  res.cookie("accessToken", access_token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 3600 * 1000,
-  });
-
-  res.cookie("refreshToken", refresh_token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 7 * 24 * 3600 * 1000,
-  });
 
   const payload = successPayload(result);
   res.json({
@@ -70,29 +55,42 @@ export const signInWithEmailController = async (req, res, next) => {
     });
   }
 
-  const result = await signInWithEmailService(
-    signInData.data.email_address,
-    signInData.data.password_email
-  );
-  const { access_token, refresh_token } = result.session;
+  try {
+    const result = await signInWithEmailService(
+      signInData.data.email_address,
+      signInData.data.password_email
+    );
 
-  res.cookie("accessToken", access_token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 30 * 1000,
-  });
+    const { access_token, refresh_token } = result.session;
 
-  res.cookie("refreshToken", refresh_token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-  });
+    res.clearCookie("admin_token", { path: "/" });
 
-  const payload = successPayload(result);
-  res.json({
-    success: true,
-    result: payload,
-  });
+    res.cookie("accessToken", access_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      path: "/",
+      maxAge: 60 * 60 * 1000,
+    });
+
+    res.cookie("refreshToken", refresh_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    const payload = successPayload(result);
+    return res.status(200).json({
+      success: true,
+      result: payload,
+    });
+
+  } catch (error) {
+    return res.status(401).json({
+      success: false,
+      message: error.message || "Email atau password salah.",
+    });
+  }
 };
