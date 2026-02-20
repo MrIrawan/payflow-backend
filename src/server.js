@@ -11,8 +11,7 @@ import attendanceRoute from "./routes/admin/attendance/attendance.route.js";
 
 // user endpoints
 import authRoute from "./routes/user/auth/auth.routes.js";
-import userProfileRoute from "./routes/user/profile/getUserProfile.route.js";
-import editTeacherProfile from "./routes/user/profile/editUserProfile.route.js";
+import userProfileRoute from "./routes/user/profile/userProfile.route.js";
 import employeeAttendance from "./routes/user/attendance/employeeAttendance.route.js";
 
 const app = express();
@@ -36,7 +35,6 @@ app.use("/api/admin", attendanceRoute);
 // user endpoint
 app.use("/api/employee", authRoute);
 app.use("/api/employee", userProfileRoute);
-app.use("/api/employee", editTeacherProfile);
 app.use("/api/employee", employeeAttendance);
 
 app.get("/", (req, res) => {
