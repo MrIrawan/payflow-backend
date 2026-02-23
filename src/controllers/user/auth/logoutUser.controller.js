@@ -25,13 +25,13 @@ export const logoutUserController = async (req, res) => {
         res.cookie("admin_token", "", clearOptions);
 
         return res.status(200).json({
-            status: "success",
+            success: true,
             message: "User logged out successfully",
         });
 
     } catch (error) {
         return res.status(500).json({
-            status: "error",
+            success: false,
             message: "Internal Server Error during logout",
         });
     }

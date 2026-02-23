@@ -1,7 +1,7 @@
 import { getEmployeeAttendance } from "../../../services/user/attendance/getEmployeeAttendance.service.js";
 
 export const getEmployeeAttendanceController = async (req, res) => {
-    const teacherEmail = req.user.user_metadata.email_address;
+    const teacherEmail = req.user.email;
 
     if (!teacherEmail) {
         return res.status(400).json({
@@ -37,7 +37,7 @@ export const getEmployeeAttendanceController = async (req, res) => {
     }
 
     return res.status(200).json({
-        success: false,
+        success: true,
         message: "berhasil mendapatkan absensi.",
         data: employeeAttendance.attendanceResponse.data
     })
