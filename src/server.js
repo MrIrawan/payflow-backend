@@ -8,6 +8,7 @@ import "dotenv/config";
 import adminAuthRoute from "./routes/admin/auth/adminAuth.route.js";
 import teacherRoute from "./routes/admin/teacher/teacher.routes.js";
 import attendanceRoute from "./routes/admin/attendance/attendance.route.js";
+import adminInfoRoute from "./routes/admin/info/getAdminInfo.route.js";
 
 // user endpoints
 import authRoute from "./routes/user/auth/auth.routes.js";
@@ -31,6 +32,7 @@ app.use(cookieParser());
 app.use("/api/admin", adminAuthRoute);
 app.use("/api/admin", teacherRoute);
 app.use("/api/admin", attendanceRoute);
+app.use("/api/admin", adminInfoRoute);
 
 // user endpoint
 app.use("/api/employee", authRoute);
