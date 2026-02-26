@@ -16,4 +16,5 @@ export const updateTeacherDataSchema = z.object({
     "SBK", "PJOK", "Fiqih", "Informatika", "IPAS", "KK1 MP", "PKN",
     "Kebekerjaan", "Sejarah", "Bahasa Jepang"
   ]).array().optional(),
+  total_weekly_hours: z.number("total weekly number is required.")
 });

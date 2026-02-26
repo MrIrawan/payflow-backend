@@ -1,6 +1,6 @@
 import { supabase } from '../../../lib/supabase.js';
 
-const DAILY_BASE_SALARY = parseInt(process.env.DAILY_BASE_SALARY || '25000');
+const DAILY_BASE_SALARY = parseInt(process.env.DAILY_BASE_SALARY || '2500000');
 const DAILY_TRANSPORT = parseInt(process.env.DAILY_TRANSPORT || '45000');
 
 export const getPayrollPreviewService = async (month, year) => {
@@ -34,9 +34,9 @@ export const getPayrollPreviewService = async (month, year) => {
         ).length;
 
         // Hitung nominal uang berdasarkan total kehadiran valid
-        const teaching_salary = total_hadir * DAILY_BASE_SALARY;
-        const transport_salary = total_hadir * DAILY_TRANSPORT;
-        const total_salary = teaching_salary + transport_salary;
+        const teaching_salary = Number(total_hadir) * Number(DAILY_BASE_SALARY);
+        const transport_salary = Number(total_hadir) * Number(DAILY_TRANSPORT);
+        const total_salary = Number(teaching_salary) + Number(transport_salary);
 
         return {
             teacher_id: teacher.guru_id,

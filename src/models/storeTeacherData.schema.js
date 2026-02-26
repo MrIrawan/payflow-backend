@@ -16,6 +16,7 @@ export const storeTeacherDataSchema = z.object({
         "SBK", "PJOK", "Fiqih", "Informatika", "IPAS", "KK1 MP", "PKN",
         "Kebekerjaan", "Sejarah", "Bahasa Jepang"
     ]).array(),
+    total_weekly_hours: z.number("total weekly hours is required."),
     email_address: z.string().email("A valid email address is required."),
     password_email: z.string().min(6, "Password must be at least 6 characters long."),
 });
