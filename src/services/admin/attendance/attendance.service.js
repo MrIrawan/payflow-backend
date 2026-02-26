@@ -12,12 +12,14 @@ export const storeAttendanceService = async (data) => {
   }
 
   try {
-    const teacherName = String(attendanceData.teacher_name).toLowerCase();
+    const teacherName = String(attendanceData.teacher_name);
 
     const isTeacherExist = await supabase
       .from("data_guru")
       .select("full_name")
       .eq("full_name", teacherName);
+
+    console.log(isTeacherExist, teacherName)
 
     if (isTeacherExist.data.length === 0) {
       return {

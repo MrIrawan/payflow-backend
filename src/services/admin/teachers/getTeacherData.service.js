@@ -23,7 +23,8 @@ export const getTeacherDataByIdService = async (identifier) => {
     const response = await supabase
       .from("data_guru")
       .select("*")
-      .eq("guru_id", dataId);
+      .eq("guru_id", dataId)
+      .single();
 
     return response;
   } catch (error) {

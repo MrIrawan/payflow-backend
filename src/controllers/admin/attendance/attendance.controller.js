@@ -73,7 +73,7 @@ export const storeAttendanceController = async (request, response) => {
   const storeAttendance = await storeAttendanceService(attendanceData.data);
 
   if (storeAttendance.success === false) {
-    return response.status(401).json({
+    return response.status(400).json({
       success: false,
       message: storeAttendance.message
     })
