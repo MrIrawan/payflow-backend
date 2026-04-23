@@ -6,3 +6,5 @@ import { isUserAuthenticated } from "../../../middleware/isAuthenticated.js";
 const router = express.Router();
 
 router.get("/info", isUserAuthenticated, getUserInfoController);
+
+export default router;

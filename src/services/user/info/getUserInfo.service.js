@@ -14,7 +14,12 @@ export const getUserInfoService = async (identifier) => {
     const userAttendance = await supabase
         .from("absensi")
         .select("*")
-        .eq("teacher_name", userName).single();
+        .eq("teacher_name", userName);
 
-    return { userProfile, userAttendance };
-}
+    const userPaySlips = await supabase
+        .from("payroll_history")
+        .select("*")
+        .eq("teacher_name", userName);
+
+    return { userProfile, userAttendance, userPaySlips };
+};

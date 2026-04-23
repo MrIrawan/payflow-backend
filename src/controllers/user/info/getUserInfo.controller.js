@@ -12,6 +12,10 @@ export const getUserInfoController = async (req, res) => {
 
     const userInfo = await getUserInfoService(userEmail);
 
+    console.log(userInfo)
+    console.log(userInfo.userAttendance.error)
+    console.log(userInfo.userProfile.error)
+
     if (userInfo.userProfile.error) {
         return res.status(userInfo.userProfile.status).json({
             success: false,
@@ -33,7 +37,8 @@ export const getUserInfoController = async (req, res) => {
         message: "success to access user info",
         data: {
             profile: userInfo.userProfile.data,
-            attendance: userInfo.userAttendance.data
+            attendance: userInfo.userAttendance.data,
+            payslips: userInfo.userPaySlips.data
         }
     })
 };

@@ -1,6 +1,6 @@
 import { supabase } from '../../../lib/supabase.js';
 
-const DAILY_BASE_SALARY = parseInt(process.env.DAILY_BASE_SALARY || '2500000');
+const DAILY_BASE_SALARY = parseInt(process.env.DAILY_BASE_SALARY || '25000');
 const DAILY_TRANSPORT = parseInt(process.env.DAILY_TRANSPORT || '45000');
 
 export const getPayrollPreviewService = async (month, year) => {
@@ -9,14 +9,13 @@ export const getPayrollPreviewService = async (month, year) => {
     const lastDay = new Date(year, month, 0).getDate();
     const endDate = `${year}-${String(month).padStart(2, '0')}-${lastDay}`;
 
-    // STEP 2: Tarik data Master Guru
+    // STEP 2: Tarik data Master Guru (Sudah memasukkan total_weekly_hours)
     const { data: teachers, error: errTeachers } = await supabase
         .from('data_guru')
-        .select('guru_id, full_name');
+        .select('guru_id, full_name, total_weekly_hours');
     if (errTeachers) throw errTeachers;
 
-    // STEP 3: Tarik data Absensi bulan ini (Tanpa filter status di DB)
-    // Kita ambil kolom teacher_name dan attendance_status
+    // STEP 3: Tarik data Absensi bulan ini
     const { data: attendances, error: errAttendances } = await supabase
         .from('absensi')
         .select('teacher_name, attendance_status')
@@ -24,23 +23,31 @@ export const getPayrollPreviewService = async (month, year) => {
         .lte('attendance_date', endDate);
     if (errAttendances) throw errAttendances;
 
-    // STEP 4: Kalkulasi Gaji & Filter Ganda
+    // STEP 4: Kalkulasi Gaji dengan RUMUS BARU
     const payrollPreview = teachers.map((teacher) => {
 
-        // INI BAGIAN PENTINGNYA: Kita filter berdasarkan 2 kondisi
+        // 1. Hitung Kehadiran Valid (Hanya untuk Transport)
         const total_hadir = attendances.filter(a =>
             a.teacher_name === teacher.full_name &&
-            a.attendance_status === 'present' // Cek langsung nilai enum-nya di sini
+            a.attendance_status === 'present'
         ).length;
 
-        // Hitung nominal uang berdasarkan total kehadiran valid
-        const teaching_salary = Number(total_hadir) * Number(DAILY_BASE_SALARY);
-        const transport_salary = Number(total_hadir) * Number(DAILY_TRANSPORT);
-        const total_salary = Number(teaching_salary) + Number(transport_salary);
+        // 2. Ambil Jam Ajar dari Profil Guru (Beri fallback 0 jika data di DB kosong/null)
+        const total_jam_ajar = Number(teacher.total_weekly_hours) || 0;
+
+        // 3. RUMUS BARU: Gaji Pokok = Jam Ajar x Base Salary
+        const teaching_salary = total_jam_ajar * DAILY_BASE_SALARY;
+
+        // 4. Transport = Total Hadir x Uang Transport
+        const transport_salary = total_hadir * DAILY_TRANSPORT;
+
+        // 5. Total Gaji Bersih
+        const total_salary = teaching_salary + transport_salary;
 
         return {
             teacher_id: teacher.guru_id,
             teacher_name: teacher.full_name,
+            total_weekly_hours: total_jam_ajar, // Lempar ini ke frontend & proses generate
             total_hadir,
             teaching_salary,
             transport_salary,
@@ -48,13 +55,12 @@ export const getPayrollPreviewService = async (month, year) => {
         };
     });
 
-    // STEP 5: Sembunyikan guru yang kehadirannya 0 (Opsional agar tabel bersih)
+    // STEP 5: Sembunyikan guru yang kehadirannya 0
     return payrollPreview.filter(p => p.total_hadir > 0);
 };
 
 export const generatePayrollService = async (month, year) => {
     // 1. Validasi: Cek apakah bulan dan tahun ini sudah di-generate sebelumnya
-    // Menggunakan period_month dan period_year sesuai skema database kamu
     const { data: existing } = await supabase
         .from('payroll_history')
         .select('payroll_id')
@@ -67,18 +73,18 @@ export const generatePayrollService = async (month, year) => {
         throw new Error("Gagal: Penggajian untuk bulan ini sudah pernah dikunci!");
     }
 
-    // 2. Ambil data kalkulasi berjalan dari fungsi preview yang sudah fix tadi
+    // 2. Ambil data kalkulasi
     const payrollData = await getPayrollPreviewService(month, year);
 
     if (payrollData.length === 0) {
         throw new Error("Tidak ada data kehadiran yang valid untuk di-generate bulan ini.");
     }
 
-    // 3. Mapping data agar sesuai dengan persis kolom tabel payroll_history kamu
+    // 3. Mapping data untuk Bulk Insert (UPDATE: total_weekly_hours sekarang masuk DB!)
     const insertData = payrollData.map(data => ({
         teacher_id: data.teacher_id,
         teacher_name: data.teacher_name,
-        total_weekly_hours: 0, // Fallback angka 0 krn di DB tipe numeric
+        total_weekly_hours: data.total_weekly_hours, // Menyimpan Jam Ajar asli!
         total_hadir: data.total_hadir,
         bonus_tambahan: 0,     // Fallback angka 0
         teaching_salary: data.teaching_salary,
@@ -88,7 +94,7 @@ export const generatePayrollService = async (month, year) => {
         period_year: parseInt(year)
     }));
 
-    // 4. Eksekusi simpan (kunci) ke database secara massal (Bulk Insert)
+    // 4. Eksekusi simpan ke database
     const { error: errInsert } = await supabase
         .from('payroll_history')
         .insert(insertData);
@@ -105,7 +111,7 @@ export const getPayrollHistoryService = async (month, year) => {
         .select('*')
         .eq('period_month', parseInt(month))
         .eq('period_year', parseInt(year))
-        .order('teacher_name', { ascending: true }); // Urutkan berdasarkan nama
+        .order('teacher_name', { ascending: true });
 
     if (error) throw error;
 
