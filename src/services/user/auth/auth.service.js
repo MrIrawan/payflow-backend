@@ -1,4 +1,5 @@
 import { supabase } from "../../../lib/supabase.js";
+import { supabaseAdmin } from "../../../lib/supabaseAdmin.js";
 
 import { mergeName } from "../../../utils/mergeName.js";
 import { formatDate } from "../../../utils/formatDate.js";
@@ -11,26 +12,21 @@ export const signUpService = async (data) => {
       email: dataObject.email_address,
       password: dataObject.password_email,
       options: {
-        data: {
-          user_data_object: dataObject,
-        },
+        data: dataObject
       },
     });
 
     if (error) throw error;
 
-    const { data, error: insertError } = await supabase
-      .from("data_guru")
+    const { data, error: insertError } = await supabaseAdmin
+      .from("users")
       .insert({
-        full_name: mergeName(
-          signUpData.user.user_metadata.user_data_object.first_name,
-          signUpData.user.user_metadata.user_data_object.last_name
-        ),
+        id: signUpData.user.id,
+        first_name: signUpData.user.user_metadata.first_name,
+        last_name: signUpData.user.user_metadata.last_name,
         date_of_birth:
-          formatDate(signUpData.user.user_metadata.user_data_object.date_of_birth),
-        gender:
-          signUpData.user.user_metadata.user_data_object.gender,
-        email_address: signUpData.user.user_metadata.user_data_object.email_address,
+          formatDate(signUpData.user.user_metadata.date_of_birth),
+        gender: signUpData.user.user_metadata.gender,
       });
 
     if (insertError) throw insertError;
