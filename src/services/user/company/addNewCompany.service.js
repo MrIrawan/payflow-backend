@@ -5,7 +5,7 @@ export async function addNewCompanyService(data) {
         throw new Error("Data is required");
     }
 
-    const newCompany = await supabaseAdmin
+    const newCompanyQuery = await supabaseAdmin
         .from("companies")
         .insert({
             owner_id: data.owner_id,
@@ -14,5 +14,5 @@ export async function addNewCompanyService(data) {
         .select()
         .single();
 
-    return newCompany;
+    return newCompanyQuery;
 };

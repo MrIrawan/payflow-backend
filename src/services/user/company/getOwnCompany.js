@@ -7,14 +7,14 @@ export async function getOwnCompanyService(identifier) {
     };
 
     try {
-        const companyQuery = await supabase.from("companies").select("*").eq("owner_id", identifier).single();
+        const getCompanyQuery = await supabase.from("companies").select("*").eq("owner_id", identifier).single();
 
-        if (companyQuery.error) {
-            console.error("Error fetching own company:", companyQuery.error);
+        if (getCompanyQuery.error) {
+            console.error("Error fetching own company:", getCompanyQuery.error);
             throw new Error("Error fetching own company.");
         }
 
-        return companyQuery;
+        return getCompanyQuery;
     } catch (error) {
         console.error("Error fetching own company:", error);
         throw new Error("Error fetching own company.");
