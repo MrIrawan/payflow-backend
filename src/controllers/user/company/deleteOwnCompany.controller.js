@@ -1,17 +1,29 @@
 import { deleteOwnCompanyService } from "../../../services/user/company/deleteOwnCompany.service.js";
 
 export async function deleteOwnCompanyController(req, res) {
-    const userId = req.user.sub;
+    const { companyId } = req.params;
+    const accessToken = req.accessToken;
 
-    if (!userId) {
+    if (!companyId) {
         return res.status(400).json({
             success: false,
-            message: "user ID is required to delete a company.",
+            message: "Company ID is required to delete a company.",
         });
     }
 
+    console.log("controller: ", companyId)
+
     try {
-        await deleteOwnCompanyService(userId);
+        const deletedCompany = await deleteOwnCompanyService(companyId, accessToken);
+
+        if (deletedCompany.error) {
+            return res.status(deletedCompany.status).json({
+                success: false,
+                message: deletedCompany.error.message,
+                error: deletedCompany.error,
+                details: deletedCompany.error.details
+            })
+        }
 
         res.status(200).json({
             success: true,

@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.post('/company/add', isUserAuthenticated, addNewCompanyController);
 router.get('/company', isUserAuthenticated, getOwnCompanyController);
-router.put("/company/edit", isUserAuthenticated, editOwnCompanyController);
-router.delete("/company/delete/:identifier", isUserAuthenticated, deleteOwnCompanyController);
+router.put("/company/edit/:companyId", isUserAuthenticated, editOwnCompanyController);
+router.delete("/company/delete/:companyId", isUserAuthenticated, deleteOwnCompanyController);
 
 export default router;

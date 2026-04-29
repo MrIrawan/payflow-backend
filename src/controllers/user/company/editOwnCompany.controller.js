@@ -2,9 +2,30 @@ import { editOwnCompanyService } from "../../../services/user/company/editOwnCom
 import { editOwnCompanySchema } from "../../../models/user/company/editOwnCompany.schema.js";
 
 export async function editOwnCompanyController(req, res) {
+    const { companyId } = req.params;
     const companyData = req.body;
-    const userId = req.user.sub;
+    const accessToken = req.accessToken;
 
+    if (!companyData) {
+        return res.status(400).json({
+            success: false,
+            message: "Company data is required to edit a company.",
+        });
+    }
+
+    if (!companyId) {
+        return res.status(400).json({
+            success: false,
+            message: "Company ID is required to edit a company.",
+        });
+    }
+
+    if (!accessToken) {
+        return res.status(400).json({
+            success: false,
+            message: "Access token is required to edit a company.",
+        });
+    }
 
     try {
         // Validate the request body against the schema
@@ -20,7 +41,7 @@ export async function editOwnCompanyController(req, res) {
         }
 
         // Call the service to edit the company
-        const editedCompany = await editOwnCompanyService(userId, validatedData);
+        const editedCompany = await editOwnCompanyService(companyId, validatedData.data, accessToken);
 
         if (editedCompany.error) {
             return res.status(editedCompany.status || 400).json({

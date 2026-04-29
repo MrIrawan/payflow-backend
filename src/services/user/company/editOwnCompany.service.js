@@ -1,6 +1,6 @@
-import { supabase } from "../../../lib/supabase.js";
+import { getSupabaseWithAuth } from "../../../lib/supabaseWithAuth.js";
 
-export async function editOwnCompanyService(identifier, data) {
+export async function editOwnCompanyService(identifier, data, accessToken) {
     if (!identifier) {
         console.error("Identifier is required to edit own company.");
         throw new Error("Identifier is required to edit own company.");
@@ -11,11 +11,14 @@ export async function editOwnCompanyService(identifier, data) {
         throw new Error("Data is required to edit own company.");
     }
 
+    const supabase = getSupabaseWithAuth(accessToken);
+
     try {
         const editCompanyQuery = await supabase
             .from("companies")
-            .update(data)
-            .eq("owner_id", identifier);
+            .update({ ...data })
+            .eq("company_id", identifier)
+            .select();
 
         if (editCompanyQuery.error) {
             console.error("Error editing own company:", editCompanyQuery.error);
