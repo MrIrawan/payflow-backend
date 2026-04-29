@@ -9,9 +9,9 @@ import { isUserAuthenticated } from '../../../middleware/isAuthenticated.js';
 
 const router = express.Router();
 
-router.post('/company/add', addNewCompanyController);
+router.post('/company/add', isUserAuthenticated, addNewCompanyController);
 router.get('/company', isUserAuthenticated, getOwnCompanyController);
-router.put("/company/edit", editOwnCompanyController);
-router.delete("/company/delete/:identifier", deleteOwnCompanyController);
+router.put("/company/edit", isUserAuthenticated, editOwnCompanyController);
+router.delete("/company/delete/:identifier", isUserAuthenticated, deleteOwnCompanyController);
 
 export default router;

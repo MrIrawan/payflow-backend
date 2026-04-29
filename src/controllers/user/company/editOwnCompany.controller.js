@@ -2,11 +2,13 @@ import { editOwnCompanyService } from "../../../services/user/company/editOwnCom
 import { editOwnCompanySchema } from "../../../models/user/company/editOwnCompany.schema.js";
 
 export async function editOwnCompanyController(req, res) {
-    try {
-        const { owner_id, ...companyData } = req.body;
+    const companyData = req.body;
+    const userId = req.user.sub;
 
+
+    try {
         // Validate the request body against the schema
-        const validatedData = editOwnCompanySchema.safeParse({ owner_id, ...companyData });
+        const validatedData = editOwnCompanySchema.safeParse(companyData);
 
         if (validatedData.error) {
             return res.status(400).json({
@@ -18,7 +20,7 @@ export async function editOwnCompanyController(req, res) {
         }
 
         // Call the service to edit the company
-        const editedCompany = await editOwnCompanyService(owner_id, validatedData);
+        const editedCompany = await editOwnCompanyService(userId, validatedData);
 
         if (editedCompany.error) {
             return res.status(editedCompany.status || 400).json({
