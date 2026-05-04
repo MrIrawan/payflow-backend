@@ -9,7 +9,17 @@ export async function addNewCompanyController(req, res) {
                 message: "Company data is required",
                 error: "Bad Request"
             });
+            return;
         };
+
+        if (!req.user.sub) {
+            res.status(401).json({
+                success: false,
+                message: "Unauthorized: User ID is missing",
+                error: "Unauthorized"
+            });
+            return;
+        }
 
         const companyData = addNewCompanySchema.safeParse(req.body);
 
@@ -23,7 +33,7 @@ export async function addNewCompanyController(req, res) {
             return;
         }
 
-        const newCompany = await addNewCompanyService(companyData.data);
+        const newCompany = await addNewCompanyService(req.user.sub, companyData.data);
 
         if (newCompany.error) {
             res.status(newCompany.status).json({
@@ -37,7 +47,7 @@ export async function addNewCompanyController(req, res) {
         res.status(201).json({
             success: true,
             message: "Company added successfully",
-            data: newCompany
+            data: newCompany.data
         });
     } catch (error) {
         res.status(500).json({
