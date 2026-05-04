@@ -31,7 +31,7 @@ export const getUserInfoController = async (req, res) => {
     if (!userInfo?.userProfileQuery.data || userInfo?.userProfileQuery.data.length === 0) {
         return res.status(404).json({
             success: false,
-            message: "User profile not found."
+            message: "User info not found."
         })
     }
 

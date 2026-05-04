@@ -1,26 +1,33 @@
 import { getUserProfileService } from "../../../services/user/profile/getUserProfile.service.js";
 
 export const getUserProfileController = async (req, res) => {
-    const userEmail = req.user.user_metadata.email;
+    const userId = req.user.sub;
 
-    if (!userEmail) {
+    if (!userId) {
         return res.status(400).json({
             success: false,
-            message: "tidak bisa mengambil data profil user, email user tidak di temukan."
+            message: "tidak bisa mengambil data profil user, ID user tidak di temukan."
         });
     }
 
-    const userProfile = await getUserProfileService(userEmail);
+    const userProfile = await getUserProfileService(userId);
 
-    if (userProfile.error) {
-        return res.status(userProfile.status).json({
+    if (userProfile?.error) {
+        return res.status(userProfile?.status).json({
             success: false,
-            message: userProfile.error.message,
-            details: userProfile.error.details
+            message: userProfile?.error.message,
+            details: userProfile?.error.details
         });
     }
 
-    return res.status(userProfile.status).json({
+    if (!userProfile?.data || userProfile.data.length === 0) {
+        return res.status(404).json({
+            success: false,
+            message: "user profile not found."
+        });
+    }
+
+    return res.status(userProfile?.status).json({
         success: true,
         message: "berhasil mendapatkan data profil user.",
         data: userProfile.data
