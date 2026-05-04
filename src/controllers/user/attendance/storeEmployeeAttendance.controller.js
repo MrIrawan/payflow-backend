@@ -46,24 +46,23 @@ export const storeEmployeeAttendanceController = async (req, res) => {
 
     const storeAttendance = await storeEmployeeAttendanceService(validateStoreData.data);
 
-    if (storeAttendance.success === false) {
-        return res.status(400).json({
+    if (storeAttendance?.error) {
+        return res.status(storeAttendance?.status).json({
             success: false,
-            message: storeAttendance.message
+            message: storeAttendance?.message
         })
     }
 
-    if (storeAttendance.attendanceError) {
-        return res.status(400).json({
+    if (storeAttendance?.data.length === 0) {
+        return res.status(404).json({
             success: false,
-            message: "failed to store attendance, service error.",
-            error: storeAttendance.attendanceResponse.error
-        })
+            message: "failed to store attendance, employee not found."
+        });
     }
 
     return res.status(201).json({
         success: true,
         message: "success to store employee attendance.",
-        data: storeAttendance.attendanceResponse.data
+        data: storeAttendance?.attendanceResponse.data
     });
 }

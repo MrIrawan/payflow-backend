@@ -4,39 +4,47 @@ import { formatDate } from "../../../utils/formatDate.js";
 import { formatTime } from "../../../utils/formatTime.js";
 
 export const storeEmployeeAttendanceService = async (data) => {
-    const attendanceData = data;
+    if (!data) {
+        console.error("Data is required to store employee attendance.");
+        return;
+    }
 
     try {
-        const teacherName = String(attendanceData.teacher_name);
+        const employeeId = String(data.employee_id);
 
-        const isTeacherExist = await supabase
-            .from("data_guru")
+        const isEmployeeExist = await supabase
+            .from("employees")
             .select("full_name")
-            .eq("full_name", teacherName);
+            .eq("employee_id", employeeId);
 
-        if (isTeacherExist.data.length === 0) {
-            return {
-                success: false,
-                message: "Gagal membuat absensi, guru tidak di temukan atau tidak terdaftar."
-            }
+        if (isEmployeeExist.error) {
+            console.error("Error checking employee existence:", isEmployeeExist.error);
+            return;
         }
 
-        const attendanceResponse = await supabase
-            .from("absensi")
+        if (isEmployeeExist.data.length === 0) {
+            console.error(`Employee with ID ${employeeId} does not exist.`);
+            return;
+        }
+
+        const storeEmployeeAttendanceQuery = await supabase
+            .from("attendances")
             .insert({
-                ...attendanceData,
-                attendance_date: formatDate(attendanceData.attendance_date),
-                checkin_time: formatTime(attendanceData.checkin_time),
-                checkout_time: formatTime(attendanceData.checkout_time)
+                ...data,
+                attendance_date: formatDate(data.attendance_date),
+                checkin_time: formatTime(data.checkin_time),
+                checkout_time: formatTime(data.checkout_time)
             })
             .select();
 
-        return {
-            attendanceResponse,
-            isTeacherExist
+        if (storeEmployeeAttendanceQuery.error) {
+            console.error("Error storing employee attendance:", storeEmployeeAttendanceQuery.error);
+            return;
         }
+
+        return storeEmployeeAttendanceQuery;
     } catch (error) {
-        const fetchError = error;
-        return fetchError;
+        console.error("Unexpected error storing employee attendance:", error);
+        throw error;
     }
 }

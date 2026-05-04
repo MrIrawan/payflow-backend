@@ -1,44 +1,36 @@
 import { getEmployeeAttendance } from "../../../services/user/attendance/getEmployeeAttendance.service.js";
 
 export const getEmployeeAttendanceController = async (req, res) => {
-    const teacherEmail = req.user.email;
+    const userId = req.user.sub;
 
-    if (!teacherEmail) {
+    if (!userId) {
         return res.status(400).json({
             success: false,
-            message: "gagal mendapatkan absensi, tidak ada alamat email guru."
+            message: "gagal mendapatkan absensi, tidak ada ID pengguna."
         });
     }
 
-    console.log(teacherEmail);
+    const employeeAttendance = await getEmployeeAttendance(userId);
 
-    const employeeAttendance = await getEmployeeAttendance(teacherEmail);
-
-    if (employeeAttendance.success === false) {
-        return res.status(400).json({
+    if (employeeAttendance?.error) {
+        return res.status(employeeAttendance?.status).json({
             success: false,
-            message: "gagal mendapatkan absensi, guru tidak di temukan."
+            message: "gagal mendapatkan absensi.",
+            error: employeeAttendance?.error?.message || "Terjadi kesalahan saat mengambil data absensi.",
+            details: employeeAttendance?.error?.message || "Terjadi kesalahan saat mengambil data absensi."
         });
     }
 
-    if (employeeAttendance.attendanceResponse.error) {
-        return res.status(employeeAttendance.attendanceResponse.status).json({
+    if (!employeeAttendance?.attendanceResponse?.data) {
+        return res.status(404).json({
             success: false,
-            message: employeeAttendance.attendanceResponse.error.message,
-            details: employeeAttendance.attendanceResponse.error.details
-        });
-    }
-
-    if (employeeAttendance.fetchError) {
-        return res.status(500).json({
-            success: false,
-            message: employeeAttendance.fetchError
+            message: "gagal mendapatkan absensi, data tidak ditemukan."
         });
     }
 
     return res.status(200).json({
         success: true,
         message: "berhasil mendapatkan absensi.",
-        data: employeeAttendance.attendanceResponse.data
+        data: employeeAttendance?.attendanceResponse.data
     })
 }

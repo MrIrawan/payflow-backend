@@ -1,32 +1,41 @@
 import { supabase } from "../../../lib/supabase.js";
 
 export const getEmployeeAttendance = async (identifier) => {
-    const teacherEmail = String(identifier);
+    if (!identifier) {
+        throw new Error("Identifier is required");
+    }
 
     try {
-        const isTeacherExist = await supabase
-            .from("data_guru")
-            .select("full_name")
-            .eq("email_address", teacherEmail);
+        const getEmployeeIdQuery = await supabase
+            .from("employees")
+            .select("employee_id")
+            .eq("user_id", identifier);
 
-        if (isTeacherExist.data.length === 0) {
-            return {
-                success: false,
-                messagae: "Gagal mendapatkan absensi, guru tidak ada atau tidak terdaftar."
-            }
+        if (getEmployeeIdQuery.error) {
+            console.error("Error fetching employee ID:", getEmployeeIdQuery.error);
+            return;
         }
 
-        const teacherName = String(isTeacherExist.data[0].full_name);
+        if (getEmployeeIdQuery.data.length === 0) {
+            console.error("No employee found for the given user ID:", identifier);
+            return;
+        }
 
-        const attendanceResponse = await supabase
-            .from("absensi")
+        const employeeId = getEmployeeIdQuery.data[0].employee_id;
+
+        const getEmployeeAttendanceQuery = await supabase
+            .from("attendances")
             .select("*")
-            .eq("teacher_name", teacherName);
+            .eq("employee_id", employeeId);
 
-        return { isTeacherExist, attendanceResponse };
+        if (getEmployeeAttendanceQuery.error) {
+            console.error("Error fetching attendance records:", getEmployeeAttendanceQuery.error);
+            throw new Error("Failed to fetch attendance records");
+        }
 
+        return getEmployeeAttendanceQuery;
     } catch (error) {
-        const fetchError = error;
-        return fetchError;
+        console.error("Error fetching employee attendance:", error);
+        throw new Error("Failed to fetch employee attendance");
     }
 }
