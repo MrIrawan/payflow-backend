@@ -1,34 +1,37 @@
 import { getUserInfoService } from "../../../services/user/info/getUserInfo.service.js";
 
 export const getUserInfoController = async (req, res) => {
-    const userEmail = req.user.email;
+    const userId = req.user.sub;
 
-    if (!userEmail) {
+    if (!userId) {
         return res.status(400).json({
             success: false,
-            message: "failed to access user info, email address is required."
+            message: "failed to access user info, user ID is required."
         })
     }
 
-    const userInfo = await getUserInfoService(userEmail);
+    const userInfo = await getUserInfoService(userId);
 
-    console.log(userInfo)
-    console.log(userInfo.userAttendance.error)
-    console.log(userInfo.userProfile.error)
-
-    if (userInfo.userProfile.error) {
-        return res.status(userInfo.userProfile.status).json({
+    if (userInfo?.userProfileQuery.error) {
+        return res.status(userInfo?.userProfileQuery.status).json({
             success: false,
-            message: userInfo.userProfile.error.message,
-            details: userInfo.userProfile.error.details
+            message: userInfo?.userProfileQuery.error.message,
+            details: userInfo?.userProfileQuery.error.details
         })
     }
 
-    if (userInfo.userAttendance.error) {
-        return res.status(userInfo.userAttendance.status).json({
+    if (userInfo?.userAttendanceQuery.error) {
+        return res.status(userInfo?.userAttendanceQuery.status).json({
             success: false,
-            message: userInfo.userAttendance.error.message,
-            details: userInfo.userAttendance.error.details
+            message: userInfo?.userAttendanceQuery.error.message,
+            details: userInfo?.userAttendanceQuery.error.details
+        })
+    }
+
+    if (!userInfo?.userProfileQuery.data || userInfo?.userProfileQuery.data.length === 0) {
+        return res.status(404).json({
+            success: false,
+            message: "User profile not found."
         })
     }
 
@@ -36,9 +39,8 @@ export const getUserInfoController = async (req, res) => {
         success: true,
         message: "success to access user info",
         data: {
-            profile: userInfo.userProfile.data,
-            attendance: userInfo.userAttendance.data,
-            payslips: userInfo.userPaySlips.data
+            profile: userInfo?.userProfileQuery.data,
+            attendance: userInfo?.userAttendanceQuery.data,
         }
     })
 };

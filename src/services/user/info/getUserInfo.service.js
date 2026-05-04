@@ -1,25 +1,42 @@
 import { supabase } from "../../../lib/supabase.js";
 
 export const getUserInfoService = async (identifier) => {
-    const userEmail = String(identifier);
+    if (!identifier) {
+        throw new Error("User identifier is required to fetch user info.");
+    }
 
-    const userProfile = await supabase
-        .from("data_guru")
-        .select("*")
-        .eq("email_address", userEmail)
-        .single();
+    try {
+        const userProfileQuery = await supabase
+            .from("employees")
+            .select("*")
+            .eq("user_id", identifier);
 
-    const userName = userProfile.data.full_name;
+        if (userProfileQuery.error) {
+            console.error("Error fetching user profile:", userProfileQuery.error);
+            return;
+        }
 
-    const userAttendance = await supabase
-        .from("absensi")
-        .select("*")
-        .eq("teacher_name", userName);
+        const employeeId = userProfileQuery.data[0]?.employee_id;
 
-    const userPaySlips = await supabase
-        .from("payroll_history")
-        .select("*")
-        .eq("teacher_name", userName);
+        if (!employeeId) {
+            console.error("Employee ID not found for user:", identifier);
+            return;
+        }
 
-    return { userProfile, userAttendance, userPaySlips };
+        const userAttendanceQuery = await supabase
+            .from("attendances")
+            .select("*")
+            .eq("user_id", employeeId);
+
+        if (userAttendanceQuery.error) {
+            console.error("Error fetching user attendance:", userAttendanceQuery.error);
+            return;
+        }
+
+        return { userProfileQuery, userAttendanceQuery };
+
+    } catch (error) {
+        console.error("Error in getUserInfoService:", error);
+        throw error;
+    }
 };
