@@ -9,21 +9,29 @@ export async function getOwnCompanyController(req, res) {
         return res.status(401).json({ error: "Access token is required." });
     }
 
+
     try {
         const company = await getOwnCompanyService(req.user.sub, req.cookies.accessToken);
 
-        if (company.error) {
-            res.status(company.status).json({
+        if (company?.getOwnCompanyQuery.error) {
+            res.status(company?.getOwnCompanyQuery.status).json({
                 success: false,
-                message: company.error.message,
-                details: company.error.details || null
+                message: company?.getOwnCompanyQuery.error.message,
+                details: company?.getOwnCompanyQuery.error.details || null
+            });
+        }
+
+        if (company?.companyId === undefined) {
+            return res.status(404).json({
+                success: false,
+                message: "No company found for the user."
             });
         }
 
         res.status(200).json({
             success: true,
             message: "Own company retrieved successfully.",
-            data: company.data
+            data: company?.getOwnCompanyQuery.data
         });
 
     } catch (error) {

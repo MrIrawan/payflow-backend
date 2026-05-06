@@ -14,17 +14,34 @@ export async function getOwnCompanyService(identifier, accessToken) {
     try {
         const supabase = getSupabaseWithAuth(accessToken);
 
-        const getCompanyQuery = await supabase
-            .from("companies")
-            .select("*")
-            .eq("owner_id", identifier);
+        const getCompanyIdQuery = await supabase
+            .from("company_members")
+            .select("company_id")
+            .eq("user_id", identifier);
 
-        if (getCompanyQuery.error) {
-            console.error("Error fetching own company:", getCompanyQuery.error);
-            throw new Error("Error fetching own company.");
+        if (getCompanyIdQuery.error) {
+            console.error("Error fetching company ID:", getCompanyIdQuery.error);
+            return;
         }
 
-        return getCompanyQuery;
+        const companyId = getCompanyIdQuery.data[0]?.company_id;
+
+        if (!companyId) {
+            console.error("No company found for the user.");
+            return;
+        }
+
+        const getOwnCompanyQuery = await supabase
+            .from("companies")
+            .select("*")
+            .eq("company_id", companyId);
+
+        if (getOwnCompanyQuery.error) {
+            console.error("Error fetching own company:", getOwnCompanyQuery.error);
+            return;
+        }
+
+        return { getOwnCompanyQuery, companyId };
     } catch (error) {
         console.error("Error fetching own company:", error);
         throw new Error("Error fetching own company.");

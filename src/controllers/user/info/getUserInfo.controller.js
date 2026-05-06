@@ -10,7 +10,14 @@ export const getUserInfoController = async (req, res) => {
         })
     }
 
-    const userInfo = await getUserInfoService(userId);
+    if (!req.accessToken) {
+        return res.status(401).json({
+            success: false,
+            message: "Unauthorized: Access token is missing."
+        });
+    }
+
+    const userInfo = await getUserInfoService(userId, req.accessToken);
 
     if (userInfo?.userProfileQuery.error) {
         return res.status(userInfo?.userProfileQuery.status).json({
@@ -27,6 +34,8 @@ export const getUserInfoController = async (req, res) => {
             details: userInfo?.userAttendanceQuery.error.details
         })
     }
+
+    console.log("User Profile Data:", userInfo?.userProfileQuery.data);
 
     if (!userInfo?.userProfileQuery.data || userInfo?.userProfileQuery.data.length === 0) {
         return res.status(404).json({

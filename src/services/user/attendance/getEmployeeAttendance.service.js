@@ -1,9 +1,12 @@
 import { supabase } from "../../../lib/supabase.js";
+import { getSupabaseWithAuth } from "../../../lib/supabaseWithAuth.js";
 
-export const getEmployeeAttendance = async (identifier) => {
+export const getEmployeeAttendance = async (identifier, accessToken) => {
     if (!identifier) {
         throw new Error("Identifier is required");
     }
+
+    const supabase = getSupabaseWithAuth(accessToken)
 
     try {
         const getEmployeeIdQuery = await supabase
