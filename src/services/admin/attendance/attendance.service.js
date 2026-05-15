@@ -1,4 +1,5 @@
 import { supabase } from "../../../lib/supabase.js";
+import { supabaseAdmin } from "../../../lib/supabaseAdmin.js";
 import { formatDate } from "../../../utils/formatDate.js";
 import { formatTime } from "../../../utils/formatTime.js";
 
@@ -12,24 +13,8 @@ export const storeAttendanceService = async (data) => {
   }
 
   try {
-    const teacherName = String(attendanceData.teacher_name);
-
-    const isTeacherExist = await supabase
-      .from("data_guru")
-      .select("full_name")
-      .eq("full_name", teacherName);
-
-    console.log(isTeacherExist, teacherName)
-
-    if (isTeacherExist.data.length === 0) {
-      return {
-        success: false,
-        message: "Gagal membuat absensi, guru yang anda maksud tidak terdaftar."
-      };
-    }
-
-    const response = await supabase
-      .from("absensi")
+    const response = await supabaseAdmin
+      .from("attendances")
       .insert({
         ...attendanceData,
         attendance_date: formatDate(attendanceData.attendance_date),
@@ -39,7 +24,7 @@ export const storeAttendanceService = async (data) => {
       .select("*")
       .single();
 
-    return { isTeacherExist, response };
+    return { response };
   } catch (error) {
     console.error("error attendance service", error);
   }
@@ -62,8 +47,8 @@ export const updateAttendanceService = async (data, identifier) => {
   }
 
   try {
-    const response = await supabase
-      .from("absensi")
+    const response = await supabaseAdmin
+      .from("attendances")
       .update(attendanceUpdateData)
       .eq("attendance_id", attendanceId)
       .select()
@@ -77,7 +62,7 @@ export const updateAttendanceService = async (data, identifier) => {
 
 export const getAllAttendanceService = async () => {
   try {
-    const { data, error } = await supabase.from("absensi").select("*");
+    const { data, error } = await supabaseAdmin.from("attendances").select("*");
 
     if (error) {
       throw new Error("error fetching data: ", error);
@@ -98,8 +83,8 @@ export const deleteAttendanceService = async (attendanceId) => {
   }
 
   try {
-    const response = await supabase
-      .from("absensi")
+    const response = await supabaseAdmin
+      .from("attendances")
       .delete()
       .eq("attendance_id", attendanceId);
 
@@ -118,8 +103,8 @@ export const getAttendanceByDateService = async (identifier) => {
   const date = identifier;
 
   try {
-    const response = await supabase
-      .from("absensi")
+    const response = await supabaseAdmin
+      .from("attendances")
       .select("*")
       .eq("attendance_date", formatDate(date));
 

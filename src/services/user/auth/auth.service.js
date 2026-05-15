@@ -18,19 +18,6 @@ export const signUpService = async (data) => {
 
     if (error) throw error;
 
-    const { data, error: insertError } = await supabaseAdmin
-      .from("users")
-      .insert({
-        id: signUpData.user.id,
-        first_name: signUpData.user.user_metadata.first_name,
-        last_name: signUpData.user.user_metadata.last_name,
-        date_of_birth:
-          formatDate(signUpData.user.user_metadata.date_of_birth),
-        gender: signUpData.user.user_metadata.gender,
-      });
-
-    if (insertError) throw insertError;
-
     return signUpData;
   } catch (error) {
     console.error("signUpService error:", error?.message || error);

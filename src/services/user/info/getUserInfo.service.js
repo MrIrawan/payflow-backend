@@ -1,8 +1,12 @@
 import { getSupabaseWithAuth } from "../../../lib/supabaseWithAuth.js";
 
-export const getUserInfoService = async (identifier, accessToken) => {
+export const getUserInfoService = async (identifier, accessToken, companyId) => {
     if (!identifier) {
         throw new Error("User identifier is required to fetch user info.");
+    }
+
+    if (!companyId) {
+        throw new Error("Company ID is required to fetch user info.");
     }
 
     const supabase = getSupabaseWithAuth(accessToken);
@@ -12,6 +16,7 @@ export const getUserInfoService = async (identifier, accessToken) => {
             .from("employees")
             .select("*")
             .eq("user_id", identifier)
+            .eq("company_id", companyId)
             .single();
 
         if (userProfileQuery.error) {

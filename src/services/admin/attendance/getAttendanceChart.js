@@ -1,4 +1,5 @@
 import { supabase } from "../../../lib/supabase.js";
+import { supabaseAdmin } from "../../../lib/supabaseAdmin.js";
 
 /**
  * Build attendance chart data for admin
@@ -43,9 +44,9 @@ export const getAttendanceChartService = async ({ month, year }) => {
     /* ============================
        FETCH RAW DATA
     ============================ */
-    const { data, error } = await supabase
-        .from("absensi")
-        .select("attendance_status, attendance_date")
+    const { data, error } = await supabaseAdmin
+        .from("attendances")
+        .select("status, attendance_date")
         .gte("attendance_date", startDate.toISOString())
         .lte("attendance_date", endDate.toISOString());
 
@@ -66,14 +67,16 @@ export const getAttendanceChartService = async ({ month, year }) => {
             month: monthNames[(targetMonth ?? currentMonth) - 1],
             present: 0,
             absent: 0,
-            onLeave: 0
+            onLeave: 0,
+            permit: 0
         }];
     } else {
         chartData = Array.from({ length: 12 }, (_, i) => ({
             month: monthNames[i],
             present: 0,
             absent: 0,
-            onLeave: 0
+            onLeave: 0,
+            permit: 0
         }));
     }
 
@@ -85,13 +88,15 @@ export const getAttendanceChartService = async ({ month, year }) => {
         const monthIndex = date.getMonth();
 
         if (chartMode === "monthly") {
-            if (row.attendance_status === "present") chartData[0].present++;
-            if (row.attendance_status === "absent") chartData[0].absent++;
-            if (row.attendance_status === "onLeave") chartData[0].onLeave++;
+            if (row.status === "present") chartData[0].present++;
+            if (row.status === "absent") chartData[0].absent++;
+            if (row.status === "late") chartData[0].late++;
+            if (row.status === "permit") chartData[0].permit++;
         } else {
-            if (row.attendance_status === "present") chartData[monthIndex].present++;
-            if (row.attendance_status === "absent") chartData[monthIndex].absent++;
-            if (row.attendance_status === "onLeave") chartData[monthIndex].onLeave++;
+            if (row.status === "present") chartData[monthIndex].present++;
+            if (row.status === "absent") chartData[monthIndex].absent++;
+            if (row.status === "late") chartData[monthIndex].late++;
+            if (row.status === "permit") chartData[monthIndex].permit++;
         }
     }
 

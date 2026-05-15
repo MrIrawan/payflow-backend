@@ -1,17 +1,26 @@
 import { storeEmployeeAttendanceService } from "../../../services/user/attendance/storeEmployeeAttendance.service.js";
 import { storeEmployeeAttendanceSchema } from "../../../models/user/attendance/storeEmployeeAttendance.schema.js";
 
-import { isWithinAcceptableRadius } from "../../../utils/calculateDistance.js";
+// import { isWithinAcceptableRadius } from "../../../utils/calculateDistance.js";
 
-const schoolLat = parseFloat(process.env.SCHOOL_LATITUDE);
-const schoolLon = parseFloat(process.env.SCHOOL_LONGITUDE);
-const acceptableRadius = parseInt(process.env.ACCEPTABLE_RADIUS) || 500;
+// const schoolLat = parseFloat(process.env.SCHOOL_LATITUDE);
+// const schoolLon = parseFloat(process.env.SCHOOL_LONGITUDE);
+// const acceptableRadius = parseInt(process.env.ACCEPTABLE_RADIUS) || 500;
 
 export const storeEmployeeAttendanceController = async (req, res) => {
+    const accessToken = req.accessToken;
+
     if (!req.body) {
         return res.status(401).json({
             success: false,
             message: "failed to store attendance, request body is required."
+        });
+    }
+
+    if (!accessToken) {
+        return res.status(401).json({
+            success: false,
+            message: "failed to store attendance, access token is required."
         });
     }
 
@@ -25,31 +34,33 @@ export const storeEmployeeAttendanceController = async (req, res) => {
         });
     }
 
-    if (validateStoreData.data.attendance_status === "present") {
-        const validateUserLocation = isWithinAcceptableRadius(
-            req.body.location.latitude,
-            req.body.location.longitude,
-            schoolLat,
-            schoolLon,
-            acceptableRadius
-        );
+    // if (validateStoreData.data.attendance_status === "present") {
+    //     const validateUserLocation = isWithinAcceptableRadius(
+    //         req.body.location.latitude,
+    //         req.body.location.longitude,
+    //         schoolLat,
+    //         schoolLon,
+    //         acceptableRadius
+    //     );
 
-        if (!validateUserLocation.isValid) {
-            return res.status(403).json({
-                success: false,
-                message: `you are ${validateUserLocation.distance}m away from school. maximum allowed distance: ${validateUserLocation.radiusLimit}m.`
-            })
-        }
+    //     if (!validateUserLocation.isValid) {
+    //         return res.status(403).json({
+    //             success: false,
+    //             message: `you are ${validateUserLocation.distance}m away from school. maximum allowed distance: ${validateUserLocation.radiusLimit}m.`
+    //         })
+    //     }
 
-        return;
-    }
+    //     return;
+    // }
 
-    const storeAttendance = await storeEmployeeAttendanceService(validateStoreData.data);
+    const storeAttendance = await storeEmployeeAttendanceService(validateStoreData.data, accessToken);
+
+    console.log("storeAttendance:", storeAttendance);
 
     if (storeAttendance?.error) {
         return res.status(storeAttendance?.status).json({
             success: false,
-            message: storeAttendance?.message
+            message: storeAttendance?.error.message
         })
     }
 
@@ -63,6 +74,6 @@ export const storeEmployeeAttendanceController = async (req, res) => {
     return res.status(201).json({
         success: true,
         message: "success to store employee attendance.",
-        data: storeAttendance?.attendanceResponse.data
+        data: storeAttendance?.data
     });
 }

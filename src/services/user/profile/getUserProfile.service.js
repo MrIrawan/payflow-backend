@@ -12,6 +12,7 @@ export const getUserProfileService = async (identifier, accessToken, companyId) 
             .from("employees")
             .select("*")
             .eq("user_id", identifier)
+            .eq("company_id", companyId)
             .single();
 
         console.log("userProfileQuery:", userProfileQuery);

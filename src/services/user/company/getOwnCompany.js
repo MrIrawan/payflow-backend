@@ -19,12 +19,16 @@ export async function getOwnCompanyService(identifier, accessToken) {
             .select("company_id")
             .eq("user_id", identifier);
 
+        console.log("getCompanyIdQuery:", getCompanyIdQuery);
+
         if (getCompanyIdQuery.error) {
             console.error("Error fetching company ID:", getCompanyIdQuery.error);
             return;
         }
 
-        const companyId = getCompanyIdQuery.data[0]?.company_id;
+        const companyId = getCompanyIdQuery.data.map((item) => item.company_id);
+
+        console.log("Company ID:", companyId);
 
         if (!companyId) {
             console.error("No company found for the user.");
@@ -34,7 +38,7 @@ export async function getOwnCompanyService(identifier, accessToken) {
         const getOwnCompanyQuery = await supabase
             .from("companies")
             .select("*")
-            .eq("company_id", companyId);
+            .in("company_id", companyId)
 
         if (getOwnCompanyQuery.error) {
             console.error("Error fetching own company:", getOwnCompanyQuery.error);

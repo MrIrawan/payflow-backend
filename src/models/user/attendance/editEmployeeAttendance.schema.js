@@ -1,11 +1,13 @@
 import * as z from "zod";
 
 export const editEmployeeAttendanceSchema = z.object({
-    teacher_name: z.string().min(3, "teacher name at least have 3 length").optional(),
+    company_id: z.number("company id is required").optional(),
+    employee_id: z.string("employee id is required").optional(),
     attendance_date: z.coerce.date().optional(),
     checkin_time: z.number().optional(),
     checkout_time: z.number().optional(),
-    attendance_status: z.enum([
-        "present", "absent", "on leave"
-    ]).optional()
+    status: z.enum(
+        ["present", "absent", "late", "permit"],
+        "attendance status is required, please choose between 'present', 'absent', 'late', or 'permit'."
+    ).optional(),
 });

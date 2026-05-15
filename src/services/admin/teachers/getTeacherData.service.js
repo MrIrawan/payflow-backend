@@ -1,8 +1,9 @@
 import { supabase } from "../../../lib/supabase.js";
+import { supabaseAdmin } from "../../../lib/supabaseAdmin.js";
 
 export const getTeacherDataService = async () => {
   try {
-    const { data, error } = await supabase.from("data_guru").select("*");
+    const { data, error } = await supabaseAdmin.from("employees").select("*");
 
     if (error) throw error;
 
@@ -20,8 +21,8 @@ export const getTeacherDataByIdService = async (identifier) => {
   }
 
   try {
-    const response = await supabase
-      .from("data_guru")
+    const response = await supabaseAdmin
+      .from("employees")
       .select("*")
       .eq("guru_id", dataId)
       .single();

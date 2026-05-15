@@ -17,7 +17,14 @@ export const getUserInfoController = async (req, res) => {
         });
     }
 
-    const userInfo = await getUserInfoService(userId, req.accessToken);
+    if (!req.query || !req.query.companyId) {
+        return res.status(400).json({
+            success: false,
+            message: "Company ID query parameter is required."
+        });
+    }
+
+    const userInfo = await getUserInfoService(userId, req.accessToken, req.query.companyId);
 
     if (userInfo?.userProfileQuery.error) {
         return res.status(userInfo?.userProfileQuery.status).json({

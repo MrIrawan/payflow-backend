@@ -1,13 +1,15 @@
-import { supabase } from "../../../lib/supabase.js";
+import { getSupabaseWithAuth } from "../../../lib/supabaseWithAuth.js";
 
 import { formatDate } from "../../../utils/formatDate.js";
 import { formatTime } from "../../../utils/formatTime.js";
 
-export const storeEmployeeAttendanceService = async (data) => {
+export const storeEmployeeAttendanceService = async (data, accessToken) => {
     if (!data) {
         console.error("Data is required to store employee attendance.");
         return;
     }
+
+    const supabase = getSupabaseWithAuth(accessToken);
 
     try {
         const employeeId = String(data.employee_id);
@@ -27,6 +29,15 @@ export const storeEmployeeAttendanceService = async (data) => {
             return;
         }
 
+        const dataToInsert = {
+            ...data,
+            attendance_date: formatDate(data.attendance_date),
+            checkin_time: formatTime(data.checkin_time),
+            checkout_time: formatTime(data.checkout_time)
+        }
+
+        console.log("Data to insert:", dataToInsert);
+
         const storeEmployeeAttendanceQuery = await supabase
             .from("attendances")
             .insert({
@@ -35,11 +46,11 @@ export const storeEmployeeAttendanceService = async (data) => {
                 checkin_time: formatTime(data.checkin_time),
                 checkout_time: formatTime(data.checkout_time)
             })
-            .select();
+            .select()
+            .single();
 
         if (storeEmployeeAttendanceQuery.error) {
             console.error("Error storing employee attendance:", storeEmployeeAttendanceQuery.error);
-            return;
         }
 
         return storeEmployeeAttendanceQuery;

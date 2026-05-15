@@ -1,37 +1,35 @@
-import { supabase } from "../../../lib/supabase.js";
+import { getSupabaseWithAuth } from "../../../lib/supabaseWithAuth.js";
+
 import { formatTime } from "../../../utils/formatTime.js";
 
-export const editEmployeeAttendance = async (identifier, data) => {
-    const teacherName = String(identifier).toLocaleLowerCase();
-    const updateData = data;
+export const editEmployeeAttendance = async (identifier, data, accessToken) => {
+
+    if (!identifier || !data) {
+        console.error("Identifier and data are required to edit employee attendance.");
+        return;
+    }
+
+    const supabase = getSupabaseWithAuth(accessToken);
 
     try {
-        const isTeacherExist = await supabase
-            .from("data_guru")
-            .select("full_name")
-            .eq("full_name", teacherName);
-
-        if (isTeacherExist.data.length === 0) {
-            return {
-                success: false,
-                message: "Gagal edit absensi, guru tidak terdaftar."
-            };
-        }
-
-        if (updateData.checkin_time && updateData.checkout_time) {
-            updateData.checkin_time = formatTime(updateData.checkin_time);
-            updateData.checkout_time = formatTime(updateData.checkout_time);
+        if (data.checkin_time && data.checkout_time) {
+            data.checkin_time = formatTime(data.checkin_time);
+            data.checkout_time = formatTime(data.checkout_time);
         } else {
-            delete updateData.checkin_time;
-            delete updateData.checkout_time
+            delete data.checkin_time;
+            delete data.checkout_time
         };
 
-        const response = await supabase
-            .from("absensi")
-            .update(updateData)
-            .eq("teacher_name", teacherName);
+        const updateEmployeeAttendancesQuery = await supabase
+            .from("attendances")
+            .update(data)
+            .eq("attendance_id", identifier);
 
-        return { isTeacherExist, response };
+        if (updateEmployeeAttendancesQuery.error) {
+            console.error("Error updating employee attendance:", updateEmployeeAttendancesQuery.error);
+        }
+
+        return updateEmployeeAttendancesQuery;
     } catch (error) {
         const fetchError = error;
         return fetchError;

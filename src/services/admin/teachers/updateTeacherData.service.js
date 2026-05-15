@@ -1,4 +1,5 @@
 import { supabase } from "../../../lib/supabase.js";
+import { supabaseAdmin } from "../../../lib/supabaseAdmin.js";
 
 export const updateTeacherDataService = async (data, identifier) => {
   const updateData = data;
@@ -9,14 +10,14 @@ export const updateTeacherDataService = async (data, identifier) => {
 
   try {
     // validate user exists
-    const validateUser = await supabase.from("data_guru").select("guru_id").eq("guru_id", userId).single();
+    const validateUser = await supabaseAdmin.from("employees").select("guru_id").eq("guru_id", userId).single();
 
     if (validateUser.error || !validateUser.data) {
       throw new Error("teacher data not found.");
     }
 
-    const teacherUpdate = await supabase
-      .from("data_guru")
+    const teacherUpdate = await supabaseAdmin
+      .from("employees")
       .update(updateData)
       .eq("guru_id", userId)
       .select();

@@ -1,12 +1,13 @@
 import * as z from "zod";
 
 export const storeEmployeeAttendanceSchema = z.object({
-    teacher_name: z.string("teacher name is required.").min(3, "teacher name at least have 3 length."),
+    company_id: z.number("company id is required"),
+    employee_id: z.string("employee id is required"),
     attendance_date: z.coerce.date("attendance date is required."),
-    checkin_time: z.number("checkin time is required."),
-    checkout_time: z.number("checkout time is required."),
-    attendance_status: z.enum(
-        ["present", "absent", "on leave"],
-        "attendance status is required, please choose between 'present', 'absent', or 'on leave'."
-    )
+    checkin_time: z.number("check in time is required"),
+    checkout_time: z.number("check out time is required"),
+    status: z.enum(
+        ["present", "absent", "late", "permit"],
+        "attendance status is required, please choose between 'present', 'absent', 'late', or 'permit'."
+    ),
 });
