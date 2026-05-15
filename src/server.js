@@ -18,6 +18,7 @@ import employeeAttendance from "./routes/user/attendance/employeeAttendance.rout
 import employeeInfoRoute from "./routes/user/info/getUserInfo.route.js";
 import userPayrollRoutes from "./routes/user/payroll/payroll.route.js";
 import companyRoutes from "./routes/user/company/company.routes.js";
+import employeeRoutes from "./routes/user/employee/employee.route.js";
 
 const app = express();
 const PORT = process.env.SERVER_PORT || 8800;
@@ -46,6 +47,7 @@ app.use("/api/employee", employeeAttendance);
 app.use("/api/employee", employeeInfoRoute);
 app.use("/api/employee", userPayrollRoutes);
 app.use("/api/employee", companyRoutes);
+app.use("/api/employee", employeeRoutes);
 
 app.get("/", (req, res) => {
   res.json({
