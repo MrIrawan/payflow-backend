@@ -17,7 +17,19 @@ export async function getAllEMployeesOnCompanyService(accessToken, companyId) {
             console.error(getAllEmployeesQuery.error.message);
         }
 
-        return getAllEmployeesQuery;
+        const getCompanyNameQuery = await supabase
+            .from("companies")
+            .select("company_name")
+            .eq("company_id", companyId)
+            .single();
+
+        console.log(getCompanyNameQuery)
+
+        if (getCompanyNameQuery.error) {
+            console.error("get company name query error: ", getCompanyNameQuery.error.message);
+        }
+
+        return { getAllEmployeesQuery, getCompanyNameQuery };
     } catch (error) {
         console.error("Error in getAllEmployeesOnCompany: ", error);
         throw error;

@@ -15,7 +15,6 @@ export const getUserProfileService = async (identifier, accessToken, companyId) 
             .eq("company_id", companyId)
             .single();
 
-        console.log("userProfileQuery:", userProfileQuery);
 
         if (userProfileQuery.error) {
             console.error("Error fetching user profile:", userProfileQuery.error);
@@ -28,7 +27,6 @@ export const getUserProfileService = async (identifier, accessToken, companyId) 
             .eq("company_id", companyId)
             .single();
 
-        console.log("getOwnCompanyQuery:", getOwnCompanyQuery);
 
         if (getOwnCompanyQuery.error) {
             console.error("Error fetching company name:", getOwnCompanyQuery.error);
