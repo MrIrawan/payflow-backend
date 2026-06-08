@@ -23,13 +23,29 @@ import employeeRoutes from "./routes/user/employee/employee.route.js";
 const app = express();
 const PORT = process.env.SERVER_PORT || 8800;
 
-// apply middleware correctly
+// Daftar origin yang diizinkan
+const allowedOrigins = [
+  process.env.CLIENT_URL,           // production URL dari env
+  "http://localhost:3000",          // development
+  "http://localhost:3001",          // development alt port
+].filter(Boolean);                  // hapus undefined kalau env tidak di-set
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:3000",
+    origin: (origin, callback) => {
+      // Allow request tanpa origin (Postman, mobile app, server-to-server)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`CORS: origin ${origin} tidak diizinkan`));
+      }
+    },
     credentials: true,
   })
 );
+
 app.use(bodyParser.json());
 app.use(cookieParser());
 
