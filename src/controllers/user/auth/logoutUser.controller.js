@@ -1,4 +1,4 @@
-import { logoutUserService } from "../../../services/user/auth/logoutUser.service";
+import { logoutUserService } from "../../../services/user/auth/logoutUser.service.js";
 
 export const logoutUserController = async (req, res) => {
     const isProduction = process.env.NODE_ENV === "production";
