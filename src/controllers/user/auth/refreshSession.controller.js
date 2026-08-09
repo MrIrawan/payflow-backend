@@ -1,4 +1,5 @@
 import { refreshSessionService } from "../../../services/user/auth/refreshSession.service.js";
+import { sessionCtx } from "../../../utils/sessionCtx.js";
 
 export const refreshSessionController = async (req, res) => {
     const isProduction = process.env.NODE_ENV === "production";
@@ -11,6 +12,7 @@ export const refreshSessionController = async (req, res) => {
         }
 
         const session = await refreshSessionService(oldRefreshToken);
+        const roleAndCompanyIdToken = sessionCtx(session.userRole, session.companyId);
 
         // Cookie config — konsisten dengan login controller
         const cookieOptions = {
@@ -20,20 +22,25 @@ export const refreshSessionController = async (req, res) => {
             path: "/",
         };
 
-        res.cookie("accessToken", session.access_token, {
+        res.cookie("accessToken", session.data.access_token, {
             ...cookieOptions,
             maxAge: 3600 * 1000, // 1 jam
         });
 
-        res.cookie("refreshToken", session.refresh_token, {
+        res.cookie("refreshToken", session.data.refresh_token, {
             ...cookieOptions,
             maxAge: 7 * 24 * 3600 * 1000, // 7 hari
+        });
+
+        res.cookie("sessionCtx", roleAndCompanyIdToken, {
+            ...cookieOptions,
+            maxAge: 3600 * 1000, // 1 jam
         });
 
         return res.status(200).json({
             status: "success",
             data: {
-                access_token: session.access_token,
+                access_token: session.data.access_token,
             },
         });
 

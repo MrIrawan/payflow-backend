@@ -1,4 +1,5 @@
 import { supabase } from "../../../lib/supabase.js";
+import jwt from "jsonwebtoken";
 
 export const refreshSessionService = async (oldRefreshToken) => {
     if (!oldRefreshToken) {
@@ -15,6 +16,16 @@ export const refreshSessionService = async (oldRefreshToken) => {
         throw new Error(error?.message || "Failed to refresh session");
     }
 
+    const { data: roleAndCompanyIdData, error: roleAndCompanyIdError } = await supabase
+        .from("company_members")
+        .select("role, company_id")
+        .eq("user_id", data.user.id);
+
+    if (roleAndCompanyIdError) throw roleAndCompanyIdError;
+
+    const userRole = roleAndCompanyIdData[0].role;
+    const companyId = roleAndCompanyIdData[0].company_id;
+
     // Kembalikan session baru (berisi access_token & refresh_token baru)
-    return data.session;
+    return { data: data.session, userRole, companyId };
 };
