@@ -21,6 +21,7 @@ export const logoutUserController = async (req, res) => {
         res.cookie("accessToken", "", clearOptions);
         res.cookie("refreshToken", "", clearOptions);
         res.cookie("admin_token", "", clearOptions);
+        res.cookie("sessionCtx", "", clearOptions);
 
         return res.status(200).json({
             success: true,
