@@ -11,16 +11,18 @@ export async function switchCompanyService(userId, companyId, token) {
     const { data: roleAndCompanyIdData, error: roleAndCompanyIdError } = await supabase
         .from("company_members")
         .select("role")
-        .or(`company_id.eq.${companyId},user_id.eq.${userId}`);
+        .eq("company_id", companyId)
+        .eq("user_id", userId)
+        .single();
 
     if (roleAndCompanyIdError) throw roleAndCompanyIdError;
 
-    if (roleAndCompanyIdData.length === 0) {
+    if (!roleAndCompanyIdData) {
         throw new Error("User is not a member of this company.");
     };
 
     return {
-        role: roleAndCompanyIdData.map((item) => item.role),
+        role: roleAndCompanyIdData.role,
         companyid: companyId
     };
 }
