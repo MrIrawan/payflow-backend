@@ -17,7 +17,7 @@ export const switchCompanyController = async (req, res) => {
 
         const result = await switchCompanyService(userId, companyId, accessToken);
 
-        const newSessionCtx = sessionCtx(result.role[0], companyId);
+        const newSessionCtx = sessionCtx(result.role, companyId);
 
         res.cookie("sessionCtx", newSessionCtx, {
             httpOnly: true,
@@ -33,9 +33,16 @@ export const switchCompanyController = async (req, res) => {
         });
 
     } catch (error) {
+        if (error.message === "User is not a member of this company.") {
+            return res.status(403).json({
+                message: error.message,
+                data: null
+            });
+        }
+
         return res.status(500).json({
             message: "Internal server error.",
             data: null
-        })
+        });
     }
 }
