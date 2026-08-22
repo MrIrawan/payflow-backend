@@ -1,4 +1,4 @@
-import { getSupabaseWithAuth } from "../../../lib/supabaseWithAuth";
+import { getSupabaseWithAuth } from "../../../lib/supabaseWithAuth.js";
 
 export async function switchCompanyService(userId, companyId, token) {
 
