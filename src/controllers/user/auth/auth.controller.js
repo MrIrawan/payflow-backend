@@ -6,7 +6,6 @@ import {
   signInWithEmailService,
   signUpService,
 } from "../../../services/user/auth/auth.service.js";
-import { sessionCtx } from "../../../utils/sessionCtx.js";
 // import utils function to help controllers
 import { successPayload } from "../../../utils/succesPayload.js";
 
@@ -68,8 +67,6 @@ export const signInWithEmailController = async (req, res, next) => {
 
     res.clearCookie("admin_token", { path: "/" });
 
-    const roleAndCompanyIdToken = sessionCtx(result.userRole, result.companyId);
-
     res.cookie("accessToken", access_token, {
       httpOnly: true,
       secure: isProduction,
@@ -85,14 +82,6 @@ export const signInWithEmailController = async (req, res, next) => {
       path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
-
-    res.cookie("sessionCtx", roleAndCompanyIdToken, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? "none" : "strict",
-      path: "/",
-      maxAge: 60 * 60 * 1000,
-    })
 
     const payload = successPayload(result.data);
 
