@@ -61,7 +61,7 @@ export const signInWithEmailController = async (req, res, next) => {
       signInData.data.password_email
     );
 
-    const { access_token, refresh_token } = result.data.session;
+    const { access_token, refresh_token } = result.session;
 
     const isProduction = process.env.NODE_ENV === "production";
 
@@ -83,7 +83,7 @@ export const signInWithEmailController = async (req, res, next) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    const payload = successPayload(result.data);
+    const payload = successPayload(result);
 
     return res.status(200).json({
       success: true,
