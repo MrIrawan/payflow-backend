@@ -40,17 +40,7 @@ export const signInWithEmailService = async (emailData, passwordData) => {
 
     if (error) throw error;
 
-    const { data: roleAndCompanyIdData, error: roleAndCompanyIdError } = await supabase
-      .from("company_members")
-      .select("role, company_id")
-      .eq("user_id", data.user.id);
-
-    if (roleAndCompanyIdError) throw roleAndCompanyIdError;
-
-    const userRole = roleAndCompanyIdData.map((data) => data.role);
-    const companyId = roleAndCompanyIdData.map((data) => data.company_id);
-
-    return { data, userRole, companyId };
+    return data;
   } catch (error) {
     console.error("sign in service error:", error?.message || error);
     throw error;

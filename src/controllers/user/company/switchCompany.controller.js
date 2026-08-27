@@ -4,7 +4,7 @@ import { sessionCtx } from "../../../utils/sessionCtx.js";
 export const switchCompanyController = async (req, res) => {
     try {
         const companyId = req.body.companyId;
-        const userId = req.user.id;
+        const userId = req.user.sub;
         const accessToken = req.accessToken;
         const isProduction = process.env.NODE_ENV === "production";
 
