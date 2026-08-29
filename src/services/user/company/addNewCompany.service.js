@@ -37,10 +37,7 @@ export async function addNewCompanyService(identifier, data, file) {
         .select()
         .single();
 
-    if (newCompanyQuery.error) {
-        console.error("Error adding new company:", newCompanyQuery.error);
-        throw new Error("Error adding new company.");
-    }
+    if (newCompanyQuery.error) throw newCompanyQuery.error;
 
     return newCompanyQuery;
 };
