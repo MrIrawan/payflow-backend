@@ -8,7 +8,7 @@ export async function addNewCompanyService(identifier, data, file) {
     }
 
     if (file) {
-        const fileName = `company-avatar-${identifier}-${Date.now()}.webp`;
+        const fileName = `company-avatars/company-avatar-${identifier}-${Date.now()}.webp`;
 
         const { error: uploadError } = await supabaseAdmin.storage
             .from("payflow-assets")
