@@ -3,40 +3,41 @@ import { addNewCompanyService } from "../../../services/user/company/addNewCompa
 
 export async function addNewCompanyController(req, res) {
     try {
-        if (!req.body) {
-            res.status(400).json({
+        const userId = req.user.sub;
+        const companyData = req.body;
+        const file = req.file;
+
+        if (!companyData) {
+            return res.status(400).json({
                 success: false,
                 message: "Company data is required",
                 error: "Bad Request"
             });
-            return;
         };
 
-        if (!req.user.sub) {
-            res.status(401).json({
+        if (!userId) {
+            return res.status(401).json({
                 success: false,
                 message: "Unauthorized: User ID is missing",
                 error: "Unauthorized"
             });
-            return;
         }
 
-        const companyData = addNewCompanySchema.safeParse(req.body);
+        const newCompanyData = addNewCompanySchema.safeParse(companyData);
 
-        if (!companyData.success) {
-            res.status(400).json({
+        if (!newCompanyData.success) {
+            return res.status(400).json({
                 success: false,
                 message: "Invalid company data",
                 error: "Bad Request",
-                details: companyData.error.issues
+                details: newCompanyData.error.issues
             });
-            return;
         }
 
-        const newCompany = await addNewCompanyService(req.user.sub, companyData.data);
+        const newCompany = await addNewCompanyService(userId, newCompanyData.data, file);
 
         if (newCompany.error) {
-            res.status(newCompany.status).json({
+            return res.status(newCompany.status).json({
                 success: false,
                 message: "Failed to add company",
                 error: newCompany.error,
@@ -44,16 +45,19 @@ export async function addNewCompanyController(req, res) {
             });
         }
 
-        res.status(201).json({
+        return res.status(201).json({
             success: true,
             message: "Company added successfully",
             data: newCompany.data
         });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Internal server error",
-            error: error.message
-        });
+        if (error.message?.includes("Only JPEG")) {
+            return res.status(400).json({ message: error.message, data: null });
+        }
+        if (error.code === "LIMIT_FILE_SIZE") {
+            return res.status(400).json({ message: "File too large. Max 2MB.", data: null });
+        }
+
+        return res.status(500).json({ message: "Internal server error.", data: null });
     }
 }
